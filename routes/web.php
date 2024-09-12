@@ -3,6 +3,7 @@
 use App\Http\Controllers\datosfalsos;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HolterController;
+use App\Livewire\Test;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,4 @@ Route::get('/', function () {
 });
 
 route::get('/datos', [datosfalsos::class, 'datos']);
+route::get('test', Test::class);
