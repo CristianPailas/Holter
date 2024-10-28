@@ -1,24 +1,61 @@
 <div>
-    <h1>TEst livewire</h1>
-    <!-- Button trigger modal -->
 
-    
-    <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Modal title</h5>
+            <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Admin</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            ...hgdfgd
+            <div>
+                <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+                    <div class="card p-4" style="width: 100%; max-width: 1000px;">
+                        <h1 class="text-center mb-4">Crear Nuevo Especialista</h1>               
+                        @if (session()->has('message'))
+                            <div class="alert alert-success">{{ session('message') }}</div>
+                        @endif
+                        <form wire:submit.prevent="submit">
+                            <div class="form-group">
+                                <label>Nombre</label>
+                                <input type="text" wire:model="name" class="form-control">
+                                @error('name') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group">
+                                <label>Número de Identificación</label>
+                                <input type="text" wire:model="identification_no" class="form-control">
+                                @error('identification_no') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group">
+                                <label>Especialidad</label>
+                                <input type="text" wire:model="specialty" class="form-control">
+                                @error('specialty') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group">
+                                <label>Años de Experiencia</label>
+                                <input type="number" wire:model="experience_years" class="form-control">
+                                @error('experience_years') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group">
+                                <label>Información de Contacto</label>
+                                <input type="text" wire:model="contact_info" class="form-control">
+                                @error('contact_info') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                
+                           
+                        </form>
+                    </div>
+                </div>
+                
+            </div>
+            
+            
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn bg-gradient-primary">Save changes</button>
+            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Cerca</button>
+            <button type="button" class="btn bg-gradient-primary"> Guardar cambios</button>
           </div>
         </div>
       </div>
@@ -29,10 +66,10 @@
               <div class="card-header pb-0">
                   <div class="d-flex flex-row justify-content-between">
                       <div>
-                          <h5 class="mb-0">All Users</h5>
+                          <h5 class="mb-0">Todos los especialistas</h5>
                       </div>
                       <button type="button" class="btn bg-gradient-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        Launch demo modal
+                        Agregar Nuevo Especialista
                       </button>
                   </div>
               </div>
@@ -45,22 +82,22 @@
                                       ID
                                   </th>
                                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                      Photo
+                                      Foto
                                   </th>
                                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                      Name
+                                      Nombre
                                   </th>
                                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                       Email
                                   </th>
                                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                      role
+                                      rol
                                   </th>
                                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                      Creation Date
+                                      Fecha de creación
                                   </th>
                                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                      Action
+                                    Acción
                                   </th>
                               </tr>
                           </thead>

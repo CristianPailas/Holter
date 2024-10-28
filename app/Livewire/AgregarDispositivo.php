@@ -4,10 +4,10 @@ namespace App\Livewire;
 
 use Livewire\Component;
 
-class Pacientes extends Component
+class AgregarDispositivo extends Component
 {
     public function render()
     {
-        return view('livewire.pacientes');
+        return view('livewire.agregar_dispositivo');
     }
 }
