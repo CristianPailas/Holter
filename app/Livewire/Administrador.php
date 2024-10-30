@@ -119,4 +119,5 @@ class Administrador extends Component
         $this->dispatch('PacienteEliminado', type: 'success', title: 'Eliminado', text: 'El paciente se ha eliminado correctamente');
       }
     }
+    
 }
