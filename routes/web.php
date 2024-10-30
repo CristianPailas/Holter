@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Dashboard;
 use App\Livewire\equiposIndex;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\pacientesIndex;
@@ -21,8 +22,8 @@ Route::get('/', function () {
 }); 
 
 
-route::get('pacientes', pacientesIndex::class);
+route::get('pacientes', pacientesIndex::class)->name('pacientes');
 
-route::get('procedimientos', procedimientosIndex::class);
-route::get('dispositivos', equiposIndex::class);
+route::get('procedimientos', procedimientosIndex::class)->name('procedimientos');
+route::get('holters', equiposIndex::class)->name('holters');
 

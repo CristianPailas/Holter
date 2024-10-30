@@ -63,35 +63,32 @@ class equiposIndex extends Component
     }
     public function creacion()
     {
+        $this->reset();
         $this->estadoModal = "Crear nuevo dispositivo";
         $this->modal = true;
     }
 
-
     public function crearDispositivos()
     {
-
-
-        #dd($this->modelo, $this->fabricante, $this->numero_serie, $this->estado);
-        if ($this->validate()) {
-
-            $dispositivo = new dispositivos();
-            $datosdispositivo['id'] = $this->id;
-            $datosdispositivo['modelo'] = $this->modelo;
-            $datosdispositivo['fabricante'] = $this->fabricante;
-            $datosdispositivo['numero_serie'] = $this->numero_serie;
-            $datosdispositivo['estado'] = $this->estado;
-           
-            if ($dispositivo::updateOrCreate([
-                'id'=>$datosdispositivo['id']
-            ],
+        $this->validate(); 
+    
+        $dispositivo = new dispositivos();
+        $datosdispositivo = [
+            'id' => $this->id,
+            'modelo' => $this->modelo,
+            'fabricante' => $this->fabricante,
+            'numero_serie' => $this->numero_serie,
+            'estado' => $this->estado,
+        ];
+    
+        if ($dispositivo::updateOrCreate(
+            ['id' => $datosdispositivo['id']],
             $datosdispositivo
-            )) {
-                $this->reset();
-                $this->dispatch('DispositivoCreado', type: 'success', title: 'Registro exitoso', text: 'El dispositivo se ha guardado correctamente');
-            }
+        )) {
+            $this->reset(); // Asegúrate de que esto esté correctamente configurado
+            $this->dispatch('DispositivoCreado', type: 'success', title: 'Registro exitoso', text: 'El dispositivo se ha guardado correctamente');
         }
-    }  
+    } 
 
     public function confirmarEliminar($id) {
         $this->modalDelete=true;
