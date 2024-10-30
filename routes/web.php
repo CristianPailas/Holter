@@ -1,18 +1,9 @@
 <?php
 
-use App\Http\Controllers\AdministradorController;
-use App\Http\Controllers\datosfalsos;
-use App\Http\Controllers\DispositivoCOntroller;
-use App\Http\Controllers\EspecialistaController;
-use App\Livewire\AgregarDispositivo;
-use App\Livewire\CrearEspecialista;
-use App\Livewire\Especialistas;
-use App\Livewire\Paciente;
+use App\Livewire\equiposIndex;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HolterController;
-use App\Http\Controllers\pacienteController;
-use App\Livewire\Administrador;
-use App\Livewire\Test;
+use App\Livewire\pacientesIndex;
+use App\Livewire\procedimientosIndex;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,14 +21,8 @@ Route::get('/', function () {
 }); 
 
 
-route::get('administrador', Administrador::class);
+route::get('pacientes', pacientesIndex::class);
 
-route::get('especialistas', Especialistas::class);
-
-
-route::get('crear_paciente', Paciente::class);
-
-route::get('crear_especialista', CrearEspecialista::class);
-
-route::get('agregar_dispositivo', AgregarDispositivo::class);
+route::get('procedimientos', procedimientosIndex::class);
+route::get('dispositivos', equiposIndex::class);
 

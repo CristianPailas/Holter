@@ -6,7 +6,7 @@ use App\Models\pacientes;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 
-class Administrador extends Component
+class pacientesIndex extends Component
 {
 
     #[Validate('required', as: 'nombree',  message: 'El :attribute es obligatorio')]
@@ -46,7 +46,7 @@ class Administrador extends Component
     {
         $this->listadoPacientes = $this->listarPacientes();
 
-        return view('livewire.administrador', ['listadoPacientes', $this->listadoPacientes]);
+        return view('livewire.pacientes', ['listadoPacientes', $this->listadoPacientes]);
     }
 
     public function editar($id)

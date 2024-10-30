@@ -7,7 +7,7 @@ use App\Models\pacientes;
 use Livewire\Component;
 use Termwind\Components\Dd;
 
-class Especialistas extends Component
+class procedimientosIndex extends Component
 {
 
     public $listaPacientes = [];
@@ -17,7 +17,7 @@ class Especialistas extends Component
 
     public function render()
     {
-        return view('livewire.especialistas', ['listaPacientes', $this->listaPacientes, 'datosPaciente', $this->datosPaciente]);
+        return view('livewire.procedimientos', ['listaPacientes', $this->listaPacientes, 'datosPaciente', $this->datosPaciente]);
     }
 
     public function NuevoProcedimiento()
