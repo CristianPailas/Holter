@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('holter', function (Blueprint $table) {
+        Schema::create('holters', function (Blueprint $table) {
             $table->id();
-            $table->string('modelo')->nullable();
-            $table->string('fabricante')->nullable();
+            $table->string('modelo');
+            $table->string('fabricante');
             $table->string('numero_serie')->unique();
+            $table->string('estado')->default('Disponible');
             $table->timestamps();
         });
     }

@@ -16,7 +16,9 @@ class pacientes extends Model
         'nombres',
         'apellidos',
         'genero',
+        'identificacion',
         'fecha_nacimiento',
+        'edad',
         'direccion'
 
     ];

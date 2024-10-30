@@ -11,9 +11,11 @@ class dispositivos extends Model
 protected $table = "holters";
 protected $primaryKey = "id";
     protected $fillable = [
-        'id',
         'modelo',
+        'numero_serie',
         'fabricante',
-        'numero_serie'
+        'estado',
+     
     ];
+    
 }
