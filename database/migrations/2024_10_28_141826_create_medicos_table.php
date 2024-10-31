@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('apellidos');
             $table->string('correo')->unique(); 
+            $table->string('contrasena');
             $table->string('identification')->unique();
             $table->string('especialidad');
-            $table->string('contrasena');
             $table->integer('experiencia');
             $table->string('contacto');
 

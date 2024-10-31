@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\equiposIndex;
+use App\Livewire\especialistaIndex;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\pacientesIndex;
 use App\Livewire\procedimientosIndex;
@@ -25,4 +26,5 @@ route::get('pacientes', pacientesIndex::class);
 
 route::get('procedimientos', procedimientosIndex::class);
 route::get('dispositivos', equiposIndex::class);
+route::get('especialistas', especialistaIndex::class);
 

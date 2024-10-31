@@ -17,7 +17,7 @@ class equiposIndex extends Component
     public $dispositivoEliminar;
 
     #[Validate('required', as: 'numero de serie',  message: 'El :attribute es obligatorio')]
-    public $numero_serie; // Asegúrate de que esta propiedad esté declarada
+    public $numero_serie; 
     #[Validate('required', as: 'modelo',  message: 'El :attribute es obligatorio')]
     public $modelo;
     #[Validate('required', as: 'fabricante',  message: 'El :attribute es obligatorio')]
@@ -58,8 +58,7 @@ class equiposIndex extends Component
  
     public function cerrar()
     {
-        $this->modal = false;
-        $this->modalDelete = false;
+        $this->reset(['modal', 'modalDelete']);
     }
     public function creacion()
     {

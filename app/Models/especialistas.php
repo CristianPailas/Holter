@@ -14,12 +14,12 @@ class especialistas extends Model
 
     protected $fillable = [
         'nombre',
-        'gmail',
-        'gmail_verificar',
-        'contraseña',
+        'apellidos',
+        'correo',
+        'contrasena',
         'identification',
         'especialidad',
         'experiencia',
-        'Contacto',
+        'contacto',
     ];
 }

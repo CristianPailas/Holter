@@ -78,7 +78,7 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()"
                                             data-bs-dismiss="modal">Cerrar</button>
-                                        <button type="submit" class="btn btn-primary mt-3">Guardar Paciente</button>
+                                        <button type="submit" class="btn btn-primary mt-3">Guardar dispositivo</button>
 
                                     </div>
                                 </form>
