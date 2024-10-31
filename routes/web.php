@@ -6,25 +6,30 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\pacientesIndex;
 use App\Livewire\procedimientosIndex;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+
 
 Route::get('/', function () {
     return view('welcome');
-}); 
+});
 
 
-route::get('pacientes', pacientesIndex::class);
 
-route::get('procedimientos', procedimientosIndex::class);
-route::get('dispositivos', equiposIndex::class);
-route::get('especialistas', especialistaIndex::class);
 
+
+
+
+Route::middleware([
+    'auth:sanctum',
+    'role:admin'
+])->group(function () {
+    route::get('holters', equiposIndex::class)->name('holters');
+    route::get('pacientes', pacientesIndex::class)->name('pacientes');
+});
+
+Route::middleware(['auth:sanctum', 'role:user'])->group(function () {
+    route::get('procedimientos', procedimientosIndex::class)->name('procedimientos');
+
+      Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');   
+});

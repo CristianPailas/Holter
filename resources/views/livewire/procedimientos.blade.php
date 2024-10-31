@@ -44,20 +44,9 @@
                                    
                                 </div>
 
-                                <div class="form-group">
-                                    <label>Dirección</label>
-                                    <input type="text" wire:model="diagnosis" class="form-control"
-                                    value="{{$datosPaciente->direccion}}">
-                                  
-                                </div>
+                               
 
-                                <div class="form-group">
-                                    <label>Indicación</label>
-                                    <textarea wire:model="indication" class="form-control" placeholder="Opcional"></textarea>
-                                    @error('indication')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                               
                                   @endif
 
 
