@@ -41,13 +41,16 @@
                     <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Cuenta</h6>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link  active " href="../pages/profile.html">
+                    <form method="POST" action="{{ route('logout') }}" x-data>
+                        @csrf                     
+                   
+                    <a class="nav-link   cursor-pointer"  @click.prevent="$root.submit();">
                         <div
                             class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                            <i class="fa-solid fa-user"></i>
                         </div>
                         <span class="nav-link-text ms-1">Perfil</span>
-                    </a>
+                    </a> </form>
                 </li>
            
             </ul>
