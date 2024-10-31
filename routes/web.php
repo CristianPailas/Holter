@@ -24,6 +24,8 @@ Route::middleware([
 ])->group(function () {
     route::get('holters', equiposIndex::class)->name('holters');
     route::get('pacientes', pacientesIndex::class)->name('pacientes');
+    route::get('especialistas', especialistaIndex::class)->name('especialistas');
+
 });
 
 Route::middleware(['auth:sanctum', 'role:user'])->group(function () {
