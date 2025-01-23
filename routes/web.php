@@ -9,7 +9,7 @@ use App\Livewire\procedimientosIndex;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 

@@ -28,86 +28,104 @@
       <div class="modal fade show" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
           aria-modal="true" style="display: block; padding-left: 0px;">
           <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-              <div class="modal-content">
 
-                  <div>
-                      <div class="container d-flex justify-content-center align-items-center"
-                          style="min-height: 100vh;">
-                          <div class="card p-4" style="width: 100%; max-width: 1000px;">
-                              <h1 class="text-center mb-4">{{ $estadoModal }}</h1>
-
-                              <form wire:submit.prevent="crearPaciente">
-                                  <div class="form-group">
-                                      <label>Nombre</label>
-                                      <input type="text" wire:model="nombres" class="form-control">
-                                      @error('nombres')
-                                          <span class="text-danger">{{ $message }}</span>
-                                      @enderror
-                                  </div>
-                                  <div class="form-group">
-                                      <label>Apellidos</label>
-                                      <input type="text" wire:model="apellidos" class="form-control">
-                                      @error('apellidos')
-                                          <span class="text-danger">{{ $message }}</span>
-                                      @enderror
-                                  </div>
-
-                                  <div class="form-group">
-                                      <label>Número de Identificación</label>
-                                      <input type="number" wire:model="identificacion" class="form-control">
-                                      @error('identificacion')
-                                          <span class="text-danger">{{ $message }}</span>
-                                      @enderror
-                                  </div>
-
-                                  <div class="form-group">
-                                      <label>Edad</label>
-                                      <input type="number" wire:model="edad" class="form-control">
-                                      @error('edad')
-                                          <span class="text-danger">{{ $message }}</span>
-                                      @enderror
-                                  </div>
-
-                                  <div class="form-group">
-                                      <label>Sexo</label>
-                                      <select wire:model="sexo" class="form-control">
-                                          <option value="">Seleccione</option>
-                                          <option value="Masculino">Masculino</option>
-                                          <option value="Femenino">Femenino</option>
-                                          <option value="Otro">Otro</option>
-                                      </select>
-                                      @error('sexo')
-                                          <span class="text-danger">{{ $message }}</span>
-                                      @enderror
-                                  </div>
-
-                                  <div class="form-group">
-                                      <label>Dirección</label>
-                                      <input type="text" wire:model="direccion" class="form-control"
-                                          placeholder="Opcional">
-                                      @error('direccion')
-                                          <span class="text-danger">{{ $message }}</span>
-                                      @enderror
-                                  </div>
-                                  <div class="form-group">
-                                      <label>fecha de nacimiento</label>
-                                      <input type="date" wire:model="fecha_nacimiento" class="form-control">
-                                      @error('fecha_nacimiento')
-                                          <span class="text-danger">{{ $message }}</span>
-                                      @enderror
-                                  </div>
-                                  <div class="modal-footer">
-                                      <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()"
-                                          data-bs-dismiss="modal">Cerrar</button>
-                                      <button type="submit" class="btn btn-primary mt-3">Guardar Paciente</button>
-
-                                  </div>
-                              </form>
-
-                          </div>
-                      </div>
-
-                  </div>
+            <div class="modal-content">
+                <div>
+                    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+                        <div class="card p-4" style="width: 100%; max-width: 1000px;">
+                            <h1 class="text-center mb-4">{{ $estadoModal }}</h1>
+            
+                            <form wire:submit.prevent="crearPaciente">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Nombre</label>
+                                            <input type="text" wire:model="nombres" class="form-control">
+                                            @error('nombres')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Apellidos</label>
+                                            <input type="text" wire:model="apellidos" class="form-control">
+                                            @error('apellidos')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+            
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Número de Identificación</label>
+                                            <input type="number" wire:model="identificacion" class="form-control">
+                                            @error('identificacion')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Edad</label>
+                                            <input type="number" wire:model="edad" class="form-control">
+                                            @error('edad')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+            
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Sexo</label>
+                                            <select wire:model="sexo" class="form-control">
+                                                <option value="">Seleccione</option>
+                                                <option value="Masculino">Masculino</option>
+                                                <option value="Femenino">Femenino</option>
+                                                <option value="Otro">Otro</option>
+                                            </select>
+                                            @error('sexo')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Dirección</label>
+                                            <input type="text" wire:model="direccion" class="form-control" placeholder="Opcional">
+                                            @error('direccion')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+            
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Fecha de Nacimiento</label>
+                                            <input type="date" wire:model="fecha_nacimiento" class="form-control">
+                                            @error('fecha_nacimiento')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+            
+                                <div class="modal-footer d-flex justify-content-end">
+                                    <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="submit" class="btn btn-primary ms-2">Guardar Paciente</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
 
 
               </div>
@@ -201,11 +219,6 @@
                       <table class="table align-items-center mb-0">
                           <thead>
                               <tr>
-
-                                  <th
-                                      class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                      Foto
-                                  </th>
                                   <th
                                       class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                       Nombre
@@ -283,7 +296,7 @@
                                           <div class="modal-content">
                                               <div class="modal-header">
                                                   <h5 class="modal-title" id="exampleModalLiveLabel">Eliminar
-                                                      producto: <b class="text-danger">
+                                                      paciente: <b class="text-danger">
                                                           {{ $pacienteEliminar->nombres }}</b></h5>
 
 

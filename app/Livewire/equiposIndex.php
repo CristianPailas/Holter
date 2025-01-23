@@ -9,6 +9,8 @@ use Livewire\Attributes\Validate;
 class equiposIndex extends Component
 {
     public $listadoDispositivos=[];
+
+    public $dispositivoSeleccionado = false;
     public $modal = false;
     public $estadoModal;
     public $datosPaciente;
@@ -43,6 +45,10 @@ class equiposIndex extends Component
         return view('livewire.dispositivos', ['listadoDispositivos', $this->listadoDispositivos]);
     }
 
+   /*  public function render()
+    {
+        return view('livewire.dispositivos', ['listadoDispositivos', $this->listadoDispositivos, 'datosdispositivos', $this->datosdispositivos]);
+    } */
     public function editar($id)
     {
         $this->id = $id;

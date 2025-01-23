@@ -1,6 +1,5 @@
 <div>
 
-
     <script>
         document.addEventListener('DispositivoCreado', (event) => {
                 let data = event.detail;
@@ -84,11 +83,9 @@
                                     </div>
 
 
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()"
-                                            data-bs-dismiss="modal">Cerrar</button>
-                                        <button type="submit" class="btn btn-primary mt-3">Guardar dispositivo</button>
-
+                                    <div class="modal-footer d-flex justify-content-end">
+                                        <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="submit" class="btn btn-primary ms-2">Guardar Paciente</button>
                                     </div>
                                 </form>
 

@@ -9,7 +9,7 @@ class especialistas extends Model
 {
     use HasFactory;
 
-    protected $table = "medicos";
+    protected $table = "especialistas";
     protected $primaryKey = "id";
 
     protected $fillable = [
@@ -21,5 +21,6 @@ class especialistas extends Model
         'especialidad',
         'experiencia',
         'contacto',
+        
     ];
 }

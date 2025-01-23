@@ -18,15 +18,15 @@ return new class extends Migration
             $table->string('rc_medio', 3);
             $table->string('fc_max', 3);
             $table->string('total_latidos', 10);
-            $table->unsignedBigInteger('paciente_id'); // Asegúrate de que la tabla se llama 'pacientes'
-            $table->unsignedBigInteger('holter_id');
-            $table->unsignedBigInteger('medico_id');
+            $table->unsignedBigInteger('pacientes_id'); // Asegúrate de que la tabla se llama 'pacientes'
+            $table->unsignedBigInteger('holters_id');
+            $table->unsignedBigInteger('especialistas_id');
             $table->timestamps();
 
             // Relaciones foráneas
-            $table->foreign('paciente_id')->references('id')->on('pacientes')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('holter_id')->references('id')->on('holters')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('medico_id')->references('id')->on('medicos')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('pacientes_id')->references('id')->on('pacientes')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('holters_id')->references('id')->on('holters')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('especialistas_id')->references('id')->on('especialistas')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

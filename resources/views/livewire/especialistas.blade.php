@@ -1,8 +1,8 @@
 <div>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   
     <script>
-        document.addEventListener('especialistaCreado', (event) => {
+        document.addEventListener('EspecialistaCreado', (event) => {
                 let data = event.detail;
                 console.log(data);
                 Swal.fire({
@@ -12,7 +12,7 @@
                     confirmButtonText: 'Ok'
                 })
             }),
-            document.addEventListener('especialistaEliminado', (event) => {
+            document.addEventListener('especialistaEliminar', (event) => {
                 let data = event.detail;
                 console.log(data);
                 Swal.fire({
@@ -30,81 +30,110 @@
         <div class="modal fade show" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-modal="true" style="display: block; padding-left: 0px;">
             <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+
                 <div class="modal-content">
                     <div>
-                        <div class="container d-flex justify-content-center align-items-center"
-                            style="min-height: 100vh;">
+                        <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
                             <div class="card p-4" style="width: 100%; max-width: 1000px;">
                                 <h1 class="text-center mb-4">{{ $estadoModal }}</h1>
-
+                
                                 <form wire:submit.prevent="crearEspecialistas">
-                                    <div class="form-group">
-                                        <label>Nombres</label>
-                                        <input type="text" wire:model="nombre" class="form-control">
-                                        @error('nombre')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Nombres</label>
+                                                <input type="text" wire:model="nombre" class="form-control">
+                                                @error('nombre')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Apellidos</label>
+                                                <input type="text" wire:model="apellidos" class="form-control">
+                                                @error('apellidos')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Apellidos</label>
-                                        <input type="text" wire:model="apellidos" class="form-control">
-                                        @error('apellidos')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
+                
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Correo</label>
+                                                <input type="email" wire:model="correo" class="form-control">
+                                                @error('correo')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Contraseña</label>
+                                                <input type="password" wire:model="contrasena" class="form-control">
+                                                @error('contrasena')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>correo</label>
-                                        <input type="email" wire:model="correo" class="form-control">
-                                        @error('correo')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
+                
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Número de Identificación</label>
+                                                <input type="text" wire:model="identification" class="form-control">
+                                                @error('identification')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Especialidad</label>
+                                                <input type="text" wire:model="especialidad" class="form-control">
+                                                @error('especialidad')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Contraseña</label>
-                                        <input type="text" wire:model="contrasena" class="form-control">
-                                        @error('contrasena')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
+                
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Años de Experiencia</label>
+                                                <input type="number" wire:model="experiencia" class="form-control">
+                                                @error('experiencia')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Información de Contacto</label>
+                                                <input type="number" wire:model="contacto" class="form-control">
+                                                @error('contacto')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Número de Identificación</label>
-                                        <input type="text" wire:model="identification" class="form-control">
-                                        @error('identification')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Especialidad</label>
-                                        <input type="text" wire:model="especialidad" class="form-control">
-                                        @error('especialidad')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Años de Experiencia</label>
-                                        <input type="number" wire:model="experiencia" class="form-control">
-                                        @error('experiencia')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Información de Contacto</label>
-                                        <input type="number" wire:model="contacto" class="form-control">
-                                        @error('contacto')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()"
-                                            data-bs-dismiss="modal">Cerrar</button>
-                                        <button type="submit" class="btn btn-primary mt-3">Guardar
-                                            Especialista</button>
+                
+                                    <div class="modal-footer d-flex justify-content-end">
+                                        <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="submit" class="btn btn-primary ms-2">Guardar Especialista</button>
                                     </div>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
+                
+                
+                
             </div>
         </div>
         {{-- MODAL --}}

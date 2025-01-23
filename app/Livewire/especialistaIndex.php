@@ -27,13 +27,13 @@ class especialistaIndex extends Component
     public $correo;
     
     #[Validate('required', as: 'contraseña', message: 'La :attribute es obligatoria y debe tener al menos 8 caracteres')]
-    public $contrasena;
+    public $contrasena; 
     
     #[Validate('required', as: 'identification', message: 'La :attribute es obligatoria')]
     public $identification;
     
-    #[Validate('required', as: 'especialidad', message: 'La :attribute es obligatoria')]
-    public $especialidad;
+     #[Validate('required', as: 'especialidad', message: 'La :attribute es obligatoria')]
+    public $especialidad; 
     
     #[Validate('required', as: 'experiencia', message: 'La :attribute es obligatoria')]
     public $experiencia;
@@ -100,6 +100,8 @@ class especialistaIndex extends Component
             $datosEspecialista['especialidad'] = $this->especialidad;
             $datosEspecialista['experiencia'] = $this->experiencia;
             $datosEspecialista['contacto'] = $this->contacto;
+
+           
            
             if ($especialistas::updateOrCreate([
                 'id'=>$datosEspecialista['id']
@@ -125,7 +127,8 @@ class especialistaIndex extends Component
      
      if (especialistas::destroy($this->id)) {
        $this->reset();
-       session()->flash('message', 'El especialista ha sido eliminado correctamente.');
+     
+       $this->dispatch('especialistaEliminar', type: 'success', title: 'Eliminado', text: 'El especialista se ha eliminado correctamente');
      }
     }
 }

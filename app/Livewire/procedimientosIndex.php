@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Http\Controllers\ProcedimientosController;
 use App\Models\pacientes;
+use App\Models\procedimientos;
 use Livewire\Component;
 use Termwind\Components\Dd;
 
@@ -14,7 +15,16 @@ class procedimientosIndex extends Component
     public $datosPaciente;
     public $modal = false;
     public $pacienteSeleccionado = false;
+    public $nombre;
+    public $correo;
+    public $identificacion;
+    
+   
 
+    public function listarProcedimientos()
+    {
+        return procedimientos::all();
+    }
     public function render()
     {
         return view('livewire.procedimientos', ['listaPacientes', $this->listaPacientes, 'datosPaciente', $this->datosPaciente]);
@@ -45,4 +55,20 @@ class procedimientosIndex extends Component
     public function cerrar(){
         $this->modal= false;
     }
+   /*  public function eliminar($id)
+    {
+     
+     if (procedimientos::destroy($this->id)) {
+       $this->reset();
+       session()->flash('message', 'El especialista ha sido eliminado correctamente.');
+     }
+    } */
+    public function eliminar($id)
+{
+    if (procedimientos::destroy($id)) {
+        $this->reset();
+        session()->flash('message', 'El procedimiento ha sido eliminado correctamente.');
+    }
+}
+
 }
