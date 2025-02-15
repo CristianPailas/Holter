@@ -23,82 +23,82 @@
             })
     </script>
     @if ($modal)
-        {{-- MODAL --}}
-        <div class="modal-backdrop fade show"></div>
-        <div class="modal fade show" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-modal="true" style="display: block; padding-left: 0px;">
-            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-                <div class="modal-content">
+    {{-- MODAL --}}
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal fade show" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-modal="true" style="display: block; padding-left: 0px;">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
 
-                    <div>
-                        <div class="container d-flex justify-content-center align-items-center"
-                            style="min-height: 100vh;">
-                            <div class="card p-4" style="width: 100%; max-width: 1000px;">
-                                <h1 class="text-center mb-4">{{ $estadoModal }}</h1>
+                <div>
+                    <div class="container d-flex justify-content-center align-items-center"
+                        style="min-height: 100vh;">
+                        <div class="card p-4" style="width: 100%; max-width: 1000px;">
+                            <h1 class="text-center mb-4">{{ $estadoModal }}</h1>
 
-                                <form wire:submit.prevent="crearDispositivos">
-                                    <div class="form-group">
-                                        <label>Número de Serie</label>
-                                        <input type="text" wire:model="numero_serie" class="form-control">
-                                        <!-- Asegúrate de usar numero_serie -->
-                                        @error('numero_serie')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror <!-- Asegúrate de usar numero_serie -->
-                                    </div>
+                            <form wire:submit.prevent="crearDispositivos">
+                                <div class="form-group">
+                                    <label>Número de Serie</label>
+                                    <input type="text" wire:model="numero_serie" class="form-control">
+                                    <!-- Asegúrate de usar numero_serie -->
+                                    @error('numero_serie')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror <!-- Asegúrate de usar numero_serie -->
+                                </div>
 
-                                    <!-- Modelo -->
-                                    <div class="form-group">
-                                        <label>Modelo</label>
-                                        <input type="text" wire:model="modelo" class="form-control">
-                                        <!-- Cambiado a 'modelo' -->
-                                        @error('modelo')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror <!-- Cambiado a 'modelo' -->
-                                    </div>
+                                <!-- Modelo -->
+                                <div class="form-group">
+                                    <label>Modelo</label>
+                                    <input type="text" wire:model="modelo" class="form-control">
+                                    <!-- Cambiado a 'modelo' -->
+                                    @error('modelo')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror <!-- Cambiado a 'modelo' -->
+                                </div>
 
-                                    <!-- Fabricante -->
-                                    <div class="form-group">
-                                        <label>Fabricante</label>
-                                        <input type="text" wire:model="fabricante" class="form-control">
-                                        <!-- Agregar campo para 'fabricante' -->
-                                        @error('fabricante')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror <!-- Manejo de errores para 'fabricante' -->
-                                    </div>
-
-
-
-                                    <!-- Estado -->
-                                    <div class="form-group">
-                                        <label>Estado</label>
-                                        <select wire:model="estado" class="form-control">
-                                            <option value="" default>Seleccione</option>
-                                            <option value="operativo">Operativo</option>
-                                            <option value="fuera de servicio">Fuera de Servicio</option>
-                                            <option value="en reparación">En Reparación</option>
-                                        </select>
-                                        @error('estado')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+                                <!-- Fabricante -->
+                                <div class="form-group">
+                                    <label>Fabricante</label>
+                                    <input type="text" wire:model="fabricante" class="form-control">
+                                    <!-- Agregar campo para 'fabricante' -->
+                                    @error('fabricante')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror <!-- Manejo de errores para 'fabricante' -->
+                                </div>
 
 
-                                    <div class="modal-footer d-flex justify-content-end">
-                                        <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()" data-bs-dismiss="modal">Cerrar</button>
-                                        <button type="submit" class="btn btn-primary ms-2">Guardar Paciente</button>
-                                    </div>
-                                </form>
 
-                            </div>
+                                <!-- Estado -->
+                                <div class="form-group">
+                                    <label>Estado</label>
+                                    <select wire:model="estado" class="form-control">
+                                        <option value="" default>Seleccione</option>
+                                        <option value="Operativo">Operativo</option>
+                                        <option value="Fuera de servicio">Fuera de Servicio</option>
+                                        <option value="En reparación">En Reparación</option>
+                                    </select>
+                                    @error('estado')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+
+                                <div class="modal-footer d-flex justify-content-end">
+                                    <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="submit" class="btn btn-primary ms-2">Guardar Paciente</button>
+                                </div>
+                            </form>
+
                         </div>
-
                     </div>
 
-
                 </div>
+
+
             </div>
         </div>
-        {{-- MODAL --}}
+    </div>
+    {{-- MODAL --}}
     @endif
 
 
@@ -108,62 +108,62 @@
             <!-- Navbar -->
             <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
                 <div class="container-fluid py-1 px-3">
-                 
-                  <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-                    <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                      
-                    </div>
-                    <ul class="navbar-nav  justify-content-end">
-                      <li class="nav-item d-flex align-items-center">
-                        <div class="input-group">
-                            <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" placeholder="Buscar dispositivo...">
-                          </div>
-                      </li>
-                      <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-                        <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
-                          <div class="sidenav-toggler-inner">
-                            <i class="sidenav-toggler-line"></i>
-                            <i class="sidenav-toggler-line"></i>
-                            <i class="sidenav-toggler-line"></i>
-                          </div>
-                        </a>
-                      </li>
-                    {{-- NOTIFICACIONES  --}}
-                    <li class="nav-item mx-3 dropdown pe-2 d-flex align-items-center">
-                        <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-bell cursor-pointer"></i>
-                        </a>
-                        <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4"
-                            aria-labelledby="dropdownMenuButton">
-                            <li class="mb-2">
-                                <a class="dropdown-item border-radius-md" href="javascript:;">
-                                    <div class="d-flex py-1">
-                                        <div class="my-auto">
-                                            <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
-                                        </div>
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="text-sm font-weight-normal mb-1">
-                                                <span class="font-weight-bold">New message</span> from Laur
-                                            </h6>
-                                            <p class="text-xs text-secondary mb-0 ">
-                                                <i class="fa fa-clock me-1"></i>
-                                                13 minutes ago
-                                            </p>
-                                        </div>
+
+                    <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+                        <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+
+                        </div>
+                        <ul class="navbar-nav  justify-content-end">
+                            <li class="nav-item d-flex align-items-center">
+                                <div class="input-group">
+                                    <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                                    <input type="text" class="form-control" placeholder="Buscar dispositivo...">
+                                </div>
+                            </li>
+                            <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                                <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                                    <div class="sidenav-toggler-inner">
+                                        <i class="sidenav-toggler-line"></i>
+                                        <i class="sidenav-toggler-line"></i>
+                                        <i class="sidenav-toggler-line"></i>
                                     </div>
                                 </a>
                             </li>
-                            {{-- FIN NOTIFICACIONES  --}}
-    
+                            {{-- NOTIFICACIONES  --}}
+                            <li class="nav-item mx-3 dropdown pe-2 d-flex align-items-center">
+                                <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-bell cursor-pointer"></i>
+                                </a>
+                                <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4"
+                                    aria-labelledby="dropdownMenuButton">
+                                    <li class="mb-2">
+                                        <a class="dropdown-item border-radius-md" href="javascript:;">
+                                            <div class="d-flex py-1">
+                                                <div class="my-auto">
+                                                    <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
+                                                </div>
+                                                <div class="d-flex flex-column justify-content-center">
+                                                    <h6 class="text-sm font-weight-normal mb-1">
+                                                        <span class="font-weight-bold">New message</span> from Laur
+                                                    </h6>
+                                                    <p class="text-xs text-secondary mb-0 ">
+                                                        <i class="fa fa-clock me-1"></i>
+                                                        13 minutes ago
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    {{-- FIN NOTIFICACIONES  --}}
+
+                                </ul>
+                            </li>
                         </ul>
-                    </li>
-                    </ul>
-                  </div>
+                    </div>
                 </div>
-              </nav>
-            
+            </nav>
+
             <!-- End Navbar -->
             <div class="container-fluid py-4">
 
@@ -212,75 +212,79 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($listadoDispositivos as $dispositivo)
-                                                <tr>
+                                            <tr>
 
 
-                                                    <td class="text-center">
-                                                        <p class="text-xs font-weight-bold mb-0">
-                                                            {{ $dispositivo->modelo }}</p>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <p class="text-xs font-weight-bold mb-0">
-                                                            {{ $dispositivo->fabricante }}</p>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <p class="text-xs font-weight-bold mb-0">
-                                                            {{ $dispositivo->numero_serie }}</p>
-                                                    </td>
+                                                <td class="text-center">
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ $dispositivo->modelo }}
+                                                    </p>
+                                                </td>
+                                                <td class="text-center">
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ $dispositivo->fabricante }}
+                                                    </p>
+                                                </td>
+                                                <td class="text-center">
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ $dispositivo->numero_serie }}
+                                                    </p>
+                                                </td>
 
-                                                    <td class="text-center">
-                                                        <p class="text-xs font-weight-bold mb-0">
-                                                            {{ $dispositivo->estado }}</p>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <a href="#" class="mx-3" data-bs-toggle="tooltip"
-                                                            data-bs-original-title="Editar"
-                                                            wire:click="editar({{ $dispositivo->id }})">
-                                                            <i class="fas fa-user-edit text-secondary"></i>
-                                                        </a>
-                                                        <span>
-                                                            <i class="cursor-pointer fas fa-trash text-secondary"
-                                                                wire:click="confirmarEliminar({{ $dispositivo->id }})"
-                                                                data-bs-original-title="Eliminar"></i>
-                                                        </span>
-                                                    </td>
-                                                </tr>
+                                                <td class="text-center">
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ $dispositivo->estado }}
+                                                    </p>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="#" class="mx-3" data-bs-toggle="tooltip"
+                                                        data-bs-original-title="Editar"
+                                                        wire:click="editar({{ $dispositivo->id }})">
+                                                        <i class="fas fa-user-edit text-secondary"></i>
+                                                    </a>
+                                                    <span>
+                                                        <i class="cursor-pointer fas fa-trash text-secondary"
+                                                            wire:click="confirmarEliminar({{ $dispositivo->id }})"
+                                                            data-bs-original-title="Eliminar"></i>
+                                                    </span>
+                                                </td>
+                                            </tr>
                                             @endforeach
 
 
 
                                             @if ($modalDelete)
-                                                <div class="modal fade show" id="exampleModalLive" tabindex="-1"
-                                                    aria-labelledby="exampleModalLiveLabel" style="display: block;"
-                                                    aria-modal="true" role="dialog">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalLiveLabel">
-                                                                    Eliminar
-                                                                    dispositivo: <b class="text-danger">
-                                                                        {{ $dispositivoEliminar->modelo }}</b></h5>
+                                            <div class="modal fade show" id="exampleModalLive" tabindex="-1"
+                                                aria-labelledby="exampleModalLiveLabel" style="display: block;"
+                                                aria-modal="true" role="dialog">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLiveLabel">
+                                                                Eliminar
+                                                                dispositivo: <b class="text-danger">
+                                                                    {{ $dispositivoEliminar->modelo }}</b></h5>
 
 
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <p>¿Está seguro de eliminar este dispositivo? esta
-                                                                    operación <b>NO</b>
-                                                                    se puede
-                                                                    deshacer! </p>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    wire:click="cerrar"
-                                                                    data-bs-dismiss="modal">Close</button>
-                                                                <button type="button"
-                                                                    wire:click="eliminar({{ $dispositivoEliminar->id }})"
-                                                                    class="btn btn-danger">Eliminar</button>
-                                                            </div>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>¿Está seguro de eliminar este dispositivo? esta
+                                                                operación <b>NO</b>
+                                                                se puede
+                                                                deshacer! </p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                wire:click="cerrar"
+                                                                data-bs-dismiss="modal">Close</button>
+                                                            <button type="button"
+                                                                wire:click="eliminar({{ $dispositivoEliminar->id }})"
+                                                                class="btn btn-danger">Eliminar</button>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="modal-backdrop fade show"></div>
+                                            </div>
+                                            <div class="modal-backdrop fade show"></div>
                                             @endif
 
 

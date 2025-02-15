@@ -6,7 +6,6 @@ use App\Http\Controllers\ProcedimientosController;
 use App\Models\pacientes;
 use App\Models\procedimientos;
 use Livewire\Component;
-use Termwind\Components\Dd;
 
 class procedimientosIndex extends Component
 {
@@ -18,8 +17,7 @@ class procedimientosIndex extends Component
     public $nombre;
     public $correo;
     public $identificacion;
-    
-   
+
 
     public function listarProcedimientos()
     {
@@ -57,7 +55,7 @@ class procedimientosIndex extends Component
     }
    /*  public function eliminar($id)
     {
-     
+
      if (procedimientos::destroy($this->id)) {
        $this->reset();
        session()->flash('message', 'El especialista ha sido eliminado correctamente.');

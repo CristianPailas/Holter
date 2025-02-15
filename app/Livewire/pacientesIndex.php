@@ -38,14 +38,12 @@ class pacientesIndex extends Component
 
     public function listarPacientes()
     {
-
         return pacientes::All();
     }
 
     public function render()
     {
         $this->listadoPacientes = $this->listarPacientes();
-
         return view('livewire.pacientes', ['listadoPacientes', $this->listadoPacientes]);
     }
 
@@ -53,14 +51,15 @@ class pacientesIndex extends Component
     {
         $this->id = $id;
         $this->modal = true;
-        $this->estadoModal = "Editar datos del paciente";
+        $this->estadoModal = "Editar Datos del Paciente";
         $datosPaciente = pacientes::find($id);
-        $this->nombres = $datosPaciente['nombres'];
-        $this->apellidos = $datosPaciente['apellidos'];
+        $this->nombres = strtoupper($datosPaciente['nombres']);
+        $this->apellidos = strtoupper($datosPaciente['apellidos']);
         $this->identificacion = $datosPaciente['identificacion'];
         $this->edad = $datosPaciente['edad'];
-        $this->sexo = $datosPaciente['sexo'];
+        $this->sexo = $datosPaciente['genero'];
         $this->direccion = $datosPaciente['direccion'];
+        $this->fecha_nacimiento  = $datosPaciente['fecha_nacimiento'];
     }
 
     public function cerrar()
@@ -70,22 +69,20 @@ class pacientesIndex extends Component
     }
     public function creacion()
     {
-        $this->estadoModal = "Crear nuevo paciente";
+        $this->estadoModal = "Crear Nuevo Paciente";
         $this->modal = true;
     }
 
 
     public function crearPaciente()
     {
-
-
         #dd($this->nombres, $this->apellidos, $this->identificacion, $this->edad, $this->sexo, $this->direccion);
         if ($this->validate()) {
 
             $paciente = new pacientes;
             $datosPaciente['id'] = $this->id;
-            $datosPaciente['nombres'] = $this->nombres;
-            $datosPaciente['apellidos'] = $this->apellidos;
+            $datosPaciente['nombres'] = strtoupper($this->nombres);
+            $datosPaciente['apellidos'] = strtoupper($this->apellidos);
             $datosPaciente['identificacion'] = $this->identificacion;
             $datosPaciente['edad'] = $this->edad;
             $datosPaciente['genero'] = $this->sexo;

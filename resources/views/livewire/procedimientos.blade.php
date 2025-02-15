@@ -27,58 +27,58 @@
 
     <div>
         @if ($modal)
-            {{-- MODAL --}}
-            <div class="modal-backdrop fade show"></div>
-            <div class="modal fade show" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                aria-modal="true" style="display: block; padding-left: 0px;">
-                <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-                    <div class="modal-content">
+        {{-- MODAL --}}
+        <div class="modal-backdrop fade show"></div>
+        <div class="modal fade show" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-modal="true" style="display: block; padding-left: 0px;">
+            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                <div class="modal-content">
 
-                        <div class="modal-body">
-                            <div class="container d-flex justify-content-center align-items-center"
-                                style="min-height: 100vh;">
-                                <div class="card p-4" style="width: 500%; max-width: 1000px;">
-                                    <h1 class="text-center mb-4">Nuevo Procedimiento</h1>
+                    <div class="modal-body">
+                        <div class="container d-flex justify-content-center align-items-center"
+                            style="min-height: 100vh;">
+                            <div class="card p-4" style="width: 500%; max-width: 1000px;">
+                                <h1 class="text-center mb-4">Nuevo Procedimiento</h1>
 
-                                    <form wire:submit.prevent="submit">
-                                        <div class="form-group">
-                                            <label>Nombre</label>
-                                            <select class="form-control" name="choices-button" id="choices-button" wire:change="datosPacienteSeleccionado($event.target.value)">
-                                                <option value="0" selected="">Seleccione un paciente</option>
-                                                @foreach ($listaPacientes as $paciente)
-                                                    <option value="{{ $paciente->id }}">{{ $paciente->nombres }} {{ $paciente->apellidos }}</option>
-                                                @endforeach
-                                            </select>
+                                <form wire:submit.prevent="submit">
+                                    <div class="form-group">
+                                        <label>Nombre</label>
+                                        <select class="form-control" name="choices-button" id="choices-button" wire:change="datosPacienteSeleccionado($event.target.value)">
+                                            <option value="0" selected="">Seleccione un paciente</option>
+                                            @foreach ($listaPacientes as $paciente)
+                                            <option value="{{ $paciente->id }}">{{ $paciente->nombres }} {{ $paciente->apellidos }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    @if ($pacienteSeleccionado)
+                                    <div class="form-group">
+                                        <label>Número de Identificación</label>
+                                        <input type="text" class="form-control" value="{{$datosPaciente->id}}">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Edad</label>
+                                                    <input type="text" class="form-control" value="{{$datosPaciente->edad}}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Sexo</label>
+                                                    <input type="text" class="form-control" value="{{$datosPaciente->genero}}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Fecha de nacimiento</label>
+                                                    <input type="text" class="form-control" value="{{$datosPaciente->fecha_nacimiento}}">
+                                                </div>
+                                            </div>
                                         </div>
 
-                                        @if ($pacienteSeleccionado)
-                                            <div class="form-group">
-                                                <label>Número de Identificación</label>
-                                                <input type="text"class="form-control" value="{{$datosPaciente->id}}">
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <label>Edad</label>
-                                                            <input type="text" class="form-control" value="{{$datosPaciente->edad}}">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <label>Sexo</label>
-                                                            <input type="text" class="form-control" value="{{$datosPaciente->genero}}">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <label>Fecha de nacimiento</label>
-                                                            <input type="text" class="form-control" value="{{$datosPaciente->fecha_nacimiento}}">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
-                                            
+
                                         @endif
-{{-- 
+                                        {{--
                                         <form wire:submit.prevent="submit">
                                             <div class="form-group">
                                                 <label>Dispositivos</label>
@@ -86,29 +86,29 @@
                                                     <option value="0" selected="">Seleccione un dispositivo</option>
                                                     @foreach ($listadoDispositivos as $dispositivos)
                                                         <option value="{{ $dispositivos->modelo }}">{{ $dispositivos->numero_serie }} {{ $dispositivos->fabricante }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </form> --}}
-                                        
+                                        @endforeach
+                                        </select>
+                                    </div>
+                                </form> --}}
 
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()" data-bs-dismiss="modal">Cerrar</button>
-                                            <button type="submit" class="btn bg-gradient-primary">Guardar</button>
-                                        </div>
-                                    </form>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="submit" class="btn bg-gradient-primary">Guardar</button>
                                 </div>
+                                </form>
                             </div>
-
                         </div>
+
                     </div>
                 </div>
             </div>
-            {{-- MODAL --}}
+        </div>
+        {{-- MODAL --}}
         @endif
 
         <body class="g-sidenav-show bg-gray-100">
-            @include('components.layouts.navbars.admin.aside')
+            @include('components.layouts.navbars.user.aside')
             <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
                 <!-- Navbar -->
                 <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
@@ -175,10 +175,10 @@
                                 <div class="card-header pb-0">
                                     <div class="d-flex flex-row justify-content-between">
                                         <div>
-                                            <h5 class="mb-0">Procedimientos activos</h5>
+                                            <h5 class="mb-0">Procedimientos</h5>
                                         </div>
                                         <button type="button" wire:click="NuevoProcedimiento" class="btn bg-gradient-primary">
-                                            Nuevo procedimiento
+                                            Nuevo Procedimiento
                                         </button>
                                     </div>
                                 </div>
@@ -206,39 +206,39 @@
                                             </thead>
                                             <tbody>
                                                 @foreach ($listaPacientes as $procedimiento)
-                                                    <tr>
-                                                        <td class="text-center">
-                                                            <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->ID }}</p>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->nombre }}</p>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->correo }}</p>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->identificacion }}</p>
-                                                        </td>
-                                                        
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->ID }}</p>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->nombre }}</p>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->correo }}</p>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->identificacion }}</p>
+                                                    </td>
 
-                                                        <td class="text-center">
-                                                            <a href="#" class="mx-3" data-bs-toggle="tooltip"
-                                                                data-bs-original-title="Editar"
-                                                                wire:click="editar({{ $procedimiento->id }})">
-                                                                <i class="fas fa-user-edit text-secondary"></i>
-                                                            </a>
-                                                            <span>
-                                                                <i class="cursor-pointer fas fa-trash text-secondary"
-                                                                    wire:click="confirmarEliminar({{ $procedimiento->id }})"
-                                                                    data-bs-original-title="Eliminar"></i>
-                                                            </span>
-                                                        </td>
-                                                    </tr>
+
+                                                    <td class="text-center">
+                                                        <a href="#" class="mx-3" data-bs-toggle="tooltip"
+                                                            data-bs-original-title="Editar"
+                                                            wire:click="editar({{ $procedimiento->id }})">
+                                                            <i class="fas fa-user-edit text-secondary"></i>
+                                                        </a>
+                                                        <span>
+                                                            <i class="cursor-pointer fas fa-trash text-secondary"
+                                                                wire:click="confirmarEliminar({{ $procedimiento->id }})"
+                                                                data-bs-original-title="Eliminar"></i>
+                                                        </span>
+                                                    </td>
+                                                </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
                                         {{-- Modal para confirmar eliminación --}}
-                                      {{--  @if ($modalDelete)
+                                        {{-- @if ($modalDelete)
                                             <div class="modal fade show" id="exampleModalLive" tabindex="-1"
                                                 aria-labelledby="exampleModalLiveLabel" style="display: block;"
                                                 aria-modal="true" role="dialog">
@@ -248,33 +248,34 @@
                                                             <h5 class="modal-title" id="exampleModalLiveLabel">Eliminar
                                                                 procedimiento:
                                                                 <b class="text-danger">{{ $procedimientoEliminar->nombre }}</b>
-                                                            </h5>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <p>¿Está seguro de eliminar este procedimiento? Esta operación
-                                                                <b>NO</b>
-                                                                se puede deshacer!</p>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                wire:click="cerrar" data-bs-dismiss="modal">Cerrar</button>
-                                                            <button type="button"
-                                                                wire:click="eliminar({{ $procedimientoEliminar->id }})"
-                                                                class="btn btn-danger">Eliminar</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-backdrop fade show"></div>
-                                        @endif 
-
-                                    </div> --}}
+                                        </h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>¿Está seguro de eliminar este procedimiento? Esta operación
+                                            <b>NO</b>
+                                            se puede deshacer!
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            wire:click="cerrar" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="button"
+                                            wire:click="eliminar({{ $procedimientoEliminar->id }})"
+                                            class="btn btn-danger">Eliminar</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="modal-backdrop fade show"></div>
+                        @endif
+
+                    </div> --}}
                 </div>
-            </main>
-        </body>
     </div>
+</div>
+</div>
+</div>
+</main>
+</body>
+</div>
 </div>

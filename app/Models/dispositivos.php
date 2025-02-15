@@ -8,14 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class dispositivos extends Model
 {
     use HasFactory;
-protected $table = "holters";
-protected $primaryKey = "id";
+    protected $table = "dispositivos";
+    protected $primaryKey = "id";
     protected $fillable = [
         'modelo',
         'numero_serie',
         'fabricante',
         'estado',
-     
+
     ];
-    
 }

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('nombre');
-            $table->string('correo')->unique(); 
+            $table->string('correo')->unique();
             $table->string('identification')->unique();
 
         });

@@ -21,11 +21,7 @@ return new class extends Migration
             $table->string('identification')->unique();
             $table->string('especialidad');
             $table->string('experiencia');
-            $table->integer('contacto');
-
-          
-           
-
+            $table->bigInteger('contacto');
         });
     }
 

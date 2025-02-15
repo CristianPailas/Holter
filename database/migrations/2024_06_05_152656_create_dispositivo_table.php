@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('holters', function (Blueprint $table) {
+        Schema::create('dispositivos', function (Blueprint $table) {
             $table->id();
             $table->string('modelo');
             $table->string('fabricante');
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('holters');
+        Schema::dropIfExists('dispositivo');
     }
 };

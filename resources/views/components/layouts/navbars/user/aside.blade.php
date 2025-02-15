@@ -10,33 +10,15 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link {{request()->routeIs('pacientes') ? 'active ' : ''}} " href="{{route('pacientes')}}">
+                <a class="nav-link {{request()->routeIs('procedimientos') ? 'active ' : ''}} " href="{{route('procedimientos')}}">
                     <div
                         class="icon  icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-people-roof"></i>
+                        <i class="fas fa-procedures"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Pacientes</span>
+                    <span class="nav-link-text ms-1">Procedimientos</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link {{request()->routeIs('especialistas') ? 'active ' : ''}} " href="{{route('especialistas')}}">
-                    <div
-                        class="icon  icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-user-doctor"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Especialistas</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link  {{request()->routeIs('dispositivos') ? 'active' : 'color-gray'}} " href="{{route('dispositivos')}}">
-                    <div class="icon  icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-pager "></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Dispositivos</span>
-                </a>
-            </li>
-        </ul>
-        <ul class="navbar-nav">
+
             <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Cuenta</h6>
             </li>
@@ -60,6 +42,9 @@
                     </a>
                 </form>
             </li>
+
+
+
         </ul>
     </div>
 

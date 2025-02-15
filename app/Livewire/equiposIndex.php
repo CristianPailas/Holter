@@ -8,7 +8,7 @@ use Livewire\Attributes\Validate;
 
 class equiposIndex extends Component
 {
-    public $listadoDispositivos=[];
+    public $listadoDispositivos = [];
 
     public $dispositivoSeleccionado = false;
     public $modal = false;
@@ -19,33 +19,31 @@ class equiposIndex extends Component
     public $dispositivoEliminar;
 
     #[Validate('required', as: 'numero de serie',  message: 'El :attribute es obligatorio')]
-    public $numero_serie; 
+    public $numero_serie;
     #[Validate('required', as: 'modelo',  message: 'El :attribute es obligatorio')]
     public $modelo;
     #[Validate('required', as: 'fabricante',  message: 'El :attribute es obligatorio')]
     public $fabricante;
     #[Validate('required', as: 'estado',  message: 'El :attribute es obligatorio')]
     public $estado;
-    
 
-    
-    
 
-    
+
+
+
+
     public function listarDispositivos()
     {
-
         return dispositivos::All();
     }
 
     public function render()
     {
         $this->listadoDispositivos = $this->listarDispositivos();
-
         return view('livewire.dispositivos', ['listadoDispositivos', $this->listadoDispositivos]);
     }
 
-   /*  public function render()
+    /*  public function render()
     {
         return view('livewire.dispositivos', ['listadoDispositivos', $this->listadoDispositivos, 'datosdispositivos', $this->datosdispositivos]);
     } */
@@ -53,15 +51,14 @@ class equiposIndex extends Component
     {
         $this->id = $id;
         $this->modal = true;
-        $this->estadoModal = "Editar datos del paciente";
+        $this->estadoModal = "Editar Datos del Dispositivo";
         $datosdispositivo = dispositivos::find($id);
-        $this->modelo = $datosdispositivo['modelo'] ;
-        $this->fabricante = $datosdispositivo['fabricante'] ;
-        $this->numero_serie = $datosdispositivo['numero_serie'] ;
-        $this->estado = $datosdispositivo['estado'] ;
-       
+        $this->modelo = strtoupper($datosdispositivo['modelo']);
+        $this->fabricante = strtoupper($datosdispositivo['fabricante']);
+        $this->numero_serie = strtoupper($datosdispositivo['numero_serie']);
+        $this->estado = $datosdispositivo['estado'];
     }
- 
+
     public function cerrar()
     {
         $this->reset(['modal', 'modalDelete']);
@@ -69,47 +66,46 @@ class equiposIndex extends Component
     public function creacion()
     {
         $this->reset();
-        $this->estadoModal = "Crear nuevo dispositivo";
+        $this->estadoModal = "Crear Nuevo Dispositivo";
         $this->modal = true;
     }
 
     public function crearDispositivos()
     {
-        $this->validate(); 
-    
+        $this->validate();
+
         $dispositivo = new dispositivos();
         $datosdispositivo = [
             'id' => $this->id,
-            'modelo' => $this->modelo,
-            'fabricante' => $this->fabricante,
-            'numero_serie' => $this->numero_serie,
+            'modelo' => strtoupper($this->modelo),
+            'fabricante' => strtoupper($this->fabricante),
+            'numero_serie' => strtoupper($this->numero_serie),
             'estado' => $this->estado,
         ];
-    
+
         if ($dispositivo::updateOrCreate(
             ['id' => $datosdispositivo['id']],
             $datosdispositivo
         )) {
-            $this->reset(); // Asegúrate de que esto esté correctamente configurado
+            $this->reset();
             $this->dispatch('DispositivoCreado', type: 'success', title: 'Registro exitoso', text: 'El dispositivo se ha guardado correctamente');
         }
-    } 
+    }
 
-    public function confirmarEliminar($id) {
-        $this->modalDelete=true;
-       $this->dispositivoEliminar = dispositivos::find($id);
-      # dd($this->dispositivoEliminar);
+    public function confirmarEliminar($id)
+    {
+        $this->modalDelete = true;
+        $this->dispositivoEliminar = dispositivos::find($id);
+        # dd($this->dispositivoEliminar);
         $this->id = $id;
     }
-    
+
     public function eliminar($id)
     {
-     
-     if (dispositivos::destroy($this->id)) {
-       $this->reset();
-        $this->dispatch('DispositivoEliminado', type: 'success', title: 'Eliminado', text: 'El dispositivo se ha eliminado correctamente');
-     }
+
+        if (dispositivos::destroy($this->id)) {
+            $this->reset();
+            $this->dispatch('DispositivoEliminado', type: 'success', title: 'Eliminado', text: 'El dispositivo se ha eliminado correctamente');
+        }
     }
 }
-
-
