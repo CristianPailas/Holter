@@ -1,6 +1,6 @@
 <div>
     <script>
-        document.addEventListener('EspecialistaCreado', (event) => {
+        document.addEventListener('EspecialistaCrear', (event) => {
                 let data = event.detail;
                 console.log(data);
                 Swal.fire({
@@ -10,7 +10,7 @@
                     confirmButtonText: 'Ok'
                 })
             }),
-            document.addEventListener('especialistaEliminar', (event) => {
+            document.addEventListener('EspecialistaEliminar', (event) => {
                 let data = event.detail;
                 console.log(data);
                 Swal.fire({
@@ -20,6 +20,16 @@
                     confirmButtonText: 'Ok'
                 })
             })
+        document.addEventListener('EspecialistaError', (event) => {
+            let data = event.detail;
+            console.log(data);
+            Swal.fire({
+                title: data.title,
+                text: data.text,
+                icon: data.type,
+                confirmButtonText: 'Ok'
+            })
+        })
     </script>
 
     @if ($modal)
@@ -308,7 +318,7 @@
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="exampleModalLiveLabel">Eliminar
                                                                 especialista:
-                                                                <b class="text-danger">{{ $especialistaEliminar->nombre }}</b>
+                                                                <b class="text-danger">{{ $EspecialistaEliminar->nombre }}</b>
                                                             </h5>
                                                         </div>
                                                         <div class="modal-body">
@@ -321,7 +331,7 @@
                                                             <button type="button" class="btn btn-secondary"
                                                                 wire:click="cerrar" data-bs-dismiss="modal">Cerrar</button>
                                                             <button type="button"
-                                                                wire:click="eliminar({{ $especialistaEliminar->id }})"
+                                                                wire:click="eliminar({{ $EspecialistaEliminar->id }})"
                                                                 class="btn btn-danger">Eliminar</button>
                                                         </div>
                                                     </div>

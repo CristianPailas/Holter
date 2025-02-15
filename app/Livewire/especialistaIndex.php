@@ -4,7 +4,11 @@ namespace App\Livewire;
 
 use App\Models\especialistas;
 use App\Models\user;
+use Dotenv\Exception\ValidationException;
+use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 
@@ -16,7 +20,7 @@ class especialistaIndex extends Component
     public $estadoModal;
     public $especialista;
     public $modalDelete = false;
-    public $especialistaEliminar;
+    public $EspecialistaEliminar;
     public $id;
 
     #[Validate('required', as: 'nombre', message: 'El :attribute es obligatorio')]
@@ -100,28 +104,38 @@ class especialistaIndex extends Component
             $datosEspecialista['experiencia'] = $this->experiencia;
             $datosEspecialista['contacto'] = $this->contacto;
 
-            $newUser = new User();
-            $newUser->name = strtoupper($this->nombre) . " " . strtoupper($this->apellidos);
-            $newUser->email = $this->correo;
-            $newUser->password = Hash::make($this->contrasena);
-            $newUser->role = 'admin';
-            $newUser->save();
 
-            if ($especialistas::updateOrCreate(
-                [
-                    'id' => $datosEspecialista['id']
-                ],
-                $datosEspecialista
-            )) {
-                $this->reset();
-                $this->dispatch('EspecialistaCreado', type: 'success', title: 'Registro exitoso', text: 'El especialista se ha guardado correctamente');
+            try {
+                $newUser = new User();
+                $newUser->name = strtoupper($this->nombre) . " " . strtoupper($this->apellidos);
+                $newUser->email = $this->correo;
+                $newUser->password = Hash::make($this->contrasena);
+                $newUser->role = 'admin';
+                $newUser->save();
+                if ($especialistas::updateOrCreate(
+                    [
+                        'id' => $datosEspecialista['id']
+                    ],
+                    $datosEspecialista
+                )) {
+                    $this->reset();
+                    $this->dispatch('EspecialistaCrear', type: 'success', title: 'Registro exitoso', text: 'El especialista se ha guardado correctamente');
+                }
+            } catch (ValidationException $e) {
+                $this->dispatch('EspecialistaError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
+            } catch (QueryException $e) {
+                Log::error('Error de consulta en la base de datos: ' . $e->getMessage());
+                $this->dispatch('EspecialistaError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
+            } catch (Exception $e) {
+                Log::error('Error en el servidor: ' . $e->getMessage());
+                $this->dispatch('EspecialistaError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
             }
         }
     }
     public function confirmarEliminar($id)
     {
         $this->modalDelete = true;
-        $this->especialistaEliminar = especialistas::find($id);
+        $this->EspecialistaEliminar = especialistas::find($id);
         # dd($this->dispositivoEliminar);
         $this->id = $id;
     }
@@ -132,7 +146,7 @@ class especialistaIndex extends Component
 
         if (especialistas::destroy($this->id)) {
             $this->reset();
-            $this->dispatch('especialistaEliminar', type: 'success', title: 'Eliminado', text: 'El especialista se ha eliminado correctamente');
+            $this->dispatch('EspecialistaEliminar', type: 'success', title: 'Eliminado', text: 'El especialista se ha eliminado correctamente');
         }
     }
 }

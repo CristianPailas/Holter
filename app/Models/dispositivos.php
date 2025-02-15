@@ -15,6 +15,5 @@ class dispositivos extends Model
         'numero_serie',
         'fabricante',
         'estado',
-
     ];
 }

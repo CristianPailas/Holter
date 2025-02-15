@@ -33,9 +33,6 @@ class pacientesIndex extends Component
     public $modalDelete = false;
     public $pacienteEliminar;
 
-
-
-
     public function listarPacientes()
     {
         return pacientes::All();
@@ -76,7 +73,6 @@ class pacientesIndex extends Component
 
     public function crearPaciente()
     {
-        #dd($this->nombres, $this->apellidos, $this->identificacion, $this->edad, $this->sexo, $this->direccion);
         if ($this->validate()) {
 
             $paciente = new pacientes;
@@ -110,7 +106,6 @@ class pacientesIndex extends Component
 
     public function eliminar($id)
     {
-
         if (pacientes::destroy($this->id)) {
             $this->reset();
             $this->dispatch('PacienteEliminado', type: 'success', title: 'Eliminado', text: 'El paciente se ha eliminado correctamente');

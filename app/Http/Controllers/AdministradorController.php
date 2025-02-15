@@ -6,9 +6,8 @@ use Illuminate\Http\Request;
 
 class AdministradorController extends Controller
 {
-    public function administrador()  
+    public function administrador()
     {
-        
-        return view('administrador'); 
+        return view('administrador');
     }
 }

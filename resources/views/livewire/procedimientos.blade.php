@@ -1,5 +1,4 @@
 <div>
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('procedimientoCreado', (event) => {
@@ -54,12 +53,12 @@
                                     @if ($pacienteSeleccionado)
                                     <div class="form-group">
                                         <label>Número de Identificación</label>
-                                        <input type="text" class="form-control" value="{{$datosPaciente->id}}">
+                                        <input type="text" class="form-control" value="{{$datosPaciente->identificacion}}">
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label>Edad</label>
-                                                    <input type="text" class="form-control" value="{{$datosPaciente->edad}}">
+                                                    <label>Celular</label>
+                                                    <input type="text" class="form-control" value="{{$datosPaciente->contactos}}">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
@@ -75,27 +74,14 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
                                         @endif
-                                        {{--
-                                        <form wire:submit.prevent="submit">
-                                            <div class="form-group">
-                                                <label>Dispositivos</label>
-                                                <select class="form-control" name="choices-button" id="choices-button" wire:change="DispositivoSeleccionado($event.target.value)">
-                                                    <option value="0" selected="">Seleccione un dispositivo</option>
-                                                    @foreach ($listadoDispositivos as $dispositivos)
-                                                        <option value="{{ $dispositivos->modelo }}">{{ $dispositivos->numero_serie }} {{ $dispositivos->fabricante }}</option>
-                                        @endforeach
-                                        </select>
-                                    </div>
-                                </form> --}}
 
 
-                                <div class="modal-footer">
-                                    <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="submit" class="btn bg-gradient-primary">Guardar</button>
-                                </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()" data-bs-dismiss="modal">Cerrar</button>
+                                            <button type="submit" class="btn bg-gradient-primary">Guardar</button>
+                                        </div>
                                 </form>
                             </div>
                         </div>

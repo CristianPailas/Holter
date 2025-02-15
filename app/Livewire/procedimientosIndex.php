@@ -30,43 +30,30 @@ class procedimientosIndex extends Component
 
     public function NuevoProcedimiento()
     {
-
         $procedimientos = new ProcedimientosController();
         $lista = $procedimientos->NuevoProcedimiento();
-        #dd($lista['pacientes']);
         foreach ($lista['pacientes'] as $key => $Paciente) {
             $this->listaPacientes[$key] = $Paciente;
         }
         $this->modal = true;
-        # dd($this->listaPacientes);
     }
 
     public function datosPacienteSeleccionado($id)
     {
-
         $this->datosPaciente = pacientes::find($id);
-
         $this->pacienteSeleccionado = true;
     }
 
-
-    public function cerrar(){
-        $this->modal= false;
-    }
-   /*  public function eliminar($id)
+    public function cerrar()
     {
-
-     if (procedimientos::destroy($this->id)) {
-       $this->reset();
-       session()->flash('message', 'El especialista ha sido eliminado correctamente.');
-     }
-    } */
-    public function eliminar($id)
-{
-    if (procedimientos::destroy($id)) {
-        $this->reset();
-        session()->flash('message', 'El procedimiento ha sido eliminado correctamente.');
+        $this->modal = false;
     }
-}
-
+    
+    public function eliminar($id)
+    {
+        if (procedimientos::destroy($id)) {
+            $this->reset();
+            session()->flash('message', 'El procedimiento ha sido eliminado correctamente.');
+        }
+    }
 }

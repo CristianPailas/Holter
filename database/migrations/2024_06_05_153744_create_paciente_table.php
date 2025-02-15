@@ -20,8 +20,9 @@ return new class extends Migration
             $table->string('genero');
             $table->date('fecha_nacimiento')->nullable();
             $table->string('direccion')->nullable();
+            $table->biginteger('celular')->nullable();
+            $table->enum('estado_pcte', ['ACTIVO', 'INACTIVO'])->default('ACTIVO');
             $table->timestamps();
-            # edad, Correo y teléfono
         });
     }
 

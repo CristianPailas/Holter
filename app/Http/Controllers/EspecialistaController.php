@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Especialista;
 use App\Models\especialistas;
 use Illuminate\Http\Request;
 

@@ -10,12 +10,12 @@ class LoginResponse implements LoginResponseContract
     {
         // Redirigir según el rol del usuario
         if ($request->user()->role === 'admin') {
-            return redirect()->route('pacientes');
+            return redirect()->route('dashboard');
         }
         if ($request->user()->role === 'user') {
-            return redirect()->route('procedimientos');
+            return redirect()->route('dashboard');
         }
-        
+
         return redirect()->route('login');
     }
 }

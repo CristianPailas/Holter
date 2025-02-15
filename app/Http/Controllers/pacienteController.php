@@ -6,9 +6,8 @@ use Illuminate\Http\Request;
 
 class pacienteController extends Controller
 {
-    public function paciente()  
+    public function paciente()
     {
-        
-        return view('paciente'); 
+        return view('paciente');
     }
 }
