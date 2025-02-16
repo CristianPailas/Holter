@@ -11,13 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('procedimientos', function (Blueprint $table) {
+        Schema::create('especialistas', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-            $table->string('nombre');
+            $table->string('nombres');
+            $table->string('apellidos');
             $table->string('correo')->unique();
+            $table->string('contrasena');
             $table->string('identification')->unique();
-
+            $table->string('especialidad');
+            $table->bigInteger('contacto');
+            $table->enum('estado_esp', ['ACTIVO', 'INACTIVO'])->default('ACTIVO');
+            $table->timestamps();
         });
     }
 
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('procedimientos');
+        Schema::dropIfExists('especialistas');
     }
 };

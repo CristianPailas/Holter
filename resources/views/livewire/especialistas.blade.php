@@ -50,8 +50,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Nombres</label>
-                                            <input type="text" wire:model="nombre" class="form-control">
-                                            @error('nombre')
+                                            <input type="text" wire:model="nombres" class="form-control">
+                                            @error('nombres')
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -112,15 +112,6 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Años de Experiencia</label>
-                                            <input type="number" wire:model="experiencia" class="form-control">
-                                            @error('experiencia')
-                                            <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
                                             <label>Información de Contacto</label>
                                             <input type="number" wire:model="contacto" class="form-control">
                                             @error('contacto')
@@ -128,6 +119,20 @@
                                             @enderror
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Estado</label>
+                                            <select wire:model="estado_esp" class="form-control">
+                                                <option value="">Seleccione</option>
+                                                <option value="ACTIVO" selected>ACTIVO</option>
+                                                <option value="INACTIVO">INACTIVO</option>
+                                            </select>
+                                            @error('estado_esp')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
                                 </div>
 
                                 <div class="modal-footer d-flex justify-content-end">
@@ -238,15 +243,15 @@
                                             </th>
                                             <th
                                                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Nombre
+                                                Nombres
                                             </th>
                                             <th
                                                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                apellidos
+                                                Apellidos
                                             </th>
                                             <th
                                                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                correo
+                                                Correo
                                             </th>
                                             <th
                                                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -254,14 +259,15 @@
                                             </th>
                                             <th
                                                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                experiencia
-                                            </th>
-                                            <th
-                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                 Contacto
                                             </th>
                                             <th
                                                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Estado
+                                            </th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+
                                                 Acciones
                                             </th>
 
@@ -273,7 +279,7 @@
                                                     <p class="text-xs font-weight-bold mb-0">{{ $especialista->identification }}</p>
                                                 </td>
                                                 <td class="text-center">
-                                                    <p class="text-xs font-weight-bold mb-0">{{ $especialista->nombre }}</p>
+                                                    <p class="text-xs font-weight-bold mb-0">{{ $especialista->nombres }}</p>
                                                 </td>
                                                 <td class="text-center">
                                                     <p class="text-xs font-weight-bold mb-0">{{ $especialista->apellidos }}
@@ -287,11 +293,15 @@
                                                     </p>
                                                 </td>
                                                 <td class="text-center">
-                                                    <p class="text-xs font-weight-bold mb-0">{{ $especialista->experiencia }}
-                                                    </p>
+                                                    <p class="text-xs font-weight-bold mb-0">{{ $especialista->contacto }}</p>
                                                 </td>
                                                 <td class="text-center">
-                                                    <p class="text-xs font-weight-bold mb-0">{{ $especialista->contacto }}</p>
+                                                    <span class="badge
+                                                            @if($especialista->estado_esp == 'ACTIVO') bg-success
+                                                            @elseif($especialista->estado_esp == 'INACTIVO') bg-danger
+                                                            @endif">
+                                                        {{ $especialista->estado_esp }}
+                                                    </span>
                                                 </td>
 
                                                 <td class="text-center">
@@ -318,7 +328,7 @@
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="exampleModalLiveLabel">Eliminar
                                                                 especialista:
-                                                                <b class="text-danger">{{ $EspecialistaEliminar->nombre }}</b>
+                                                                <b class="text-danger">{{ $EspecialistaEliminar->nombres }} {{ $EspecialistaEliminar->apellidos }}</b>
                                                             </h5>
                                                         </div>
                                                         <div class="modal-body">

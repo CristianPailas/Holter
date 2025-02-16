@@ -1,25 +1,35 @@
 <div>
     <script>
         document.addEventListener('PacienteCreado', (event) => {
-                let data = event.detail;
-                console.log(data);
-                Swal.fire({
-                    title: data.title,
-                    text: data.text,
-                    icon: data.type,
-                    confirmButtonText: 'Ok'
-                })
-            }),
-            document.addEventListener('PacienteEliminado', (event) => {
-                let data = event.detail;
-                console.log(data);
-                Swal.fire({
-                    title: data.title,
-                    text: data.text,
-                    icon: data.type,
-                    confirmButtonText: 'Ok'
-                })
+            let data = event.detail;
+            console.log(data);
+            Swal.fire({
+                title: data.title,
+                text: data.text,
+                icon: data.type,
+                confirmButtonText: 'Ok'
             })
+        });
+        document.addEventListener('PacienteEliminado', (event) => {
+            let data = event.detail;
+            console.log(data);
+            Swal.fire({
+                title: data.title,
+                text: data.text,
+                icon: data.type,
+                confirmButtonText: 'Ok'
+            })
+        });
+        document.addEventListener('PacienteError', (event) => {
+            let data = event.detail;
+            console.log(data);
+            Swal.fire({
+                title: data.title,
+                text: data.text,
+                icon: data.type,
+                confirmButtonText: 'Ok'
+            })
+        });
     </script>
     @if ($modal)
     {{-- MODAL --}}
@@ -68,18 +78,6 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Edad</label>
-                                            <input type="number" wire:model="edad" class="form-control">
-                                            @error('edad')
-                                            <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
                                             <label>Sexo</label>
                                             <select wire:model="sexo" class="form-control">
                                                 <option value="">Seleccione</option>
@@ -92,11 +90,23 @@
                                             @enderror
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="row mb-3">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Dirección</label>
                                             <input type="text" wire:model="direccion" class="form-control" placeholder="Opcional">
                                             @error('direccion')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Celular</label>
+                                            <input type="text" wire:model="celular" class="form-control" placeholder="3...">
+                                            @error('celular')
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -109,6 +119,19 @@
                                             <label>Fecha de Nacimiento</label>
                                             <input type="date" wire:model="fecha_nacimiento" class="form-control">
                                             @error('fecha_nacimiento')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Estado</label>
+                                            <select wire:model="estado_pcte" class="form-control">
+                                                <option value="">Seleccione</option>
+                                                <option value="ACTIVO" selected>ACTIVO</option>
+                                                <option value="INACTIVO">INACTIVO</option>
+                                            </select>
+                                            @error('estado_pcte')
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -244,7 +267,11 @@
                                             </th>
                                             <th
                                                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Edad
+                                                Celular
+                                            </th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Estado
                                             </th>
                                             <th
                                                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -280,7 +307,15 @@
                                             </td>
                                             <td class="text-center">
                                                 <span
-                                                    class="text-secondary text-xs font-weight-bold">{{ $paciente->edad }}</span>
+                                                    class="text-secondary text-xs font-weight-bold">{{ $paciente->celular }}</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge
+                                                            @if($paciente->estado_pcte == 'ACTIVO') bg-success
+                                                            @elseif($paciente->estado_pcte == 'INACTIVO') bg-danger
+                                                            @endif">
+                                                    {{ $paciente->estado_pcte }}
+                                                </span>
                                             </td>
                                             <td class="text-center">
                                                 <a href="#" class="mx-3" data-bs-toggle="tooltip"
@@ -308,7 +343,7 @@
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="exampleModalLiveLabel">Eliminar
                                                             paciente: <b class="text-danger">
-                                                                {{ $pacienteEliminar->nombres }}</b></h5>
+                                                                {{ $pacienteEliminar->nombres }} {{ $pacienteEliminar->apellidos }}</b></h5>
 
 
                                                     </div>

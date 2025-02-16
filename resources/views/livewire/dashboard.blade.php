@@ -81,9 +81,67 @@
                                 </div>
                             </div>
                             <div class="card-body px-0 pt-0 pb-2">
-                                <div class="table-responsive p-0">
-                                    Aqui vamos a poner las cards
+
+                                <div class="container-fluid py-4">
+                                    <div class="row my-4">
+                                        <div class="col-12">
+                                            <div class="row">
+
+                                                <!-- Card Admin: Costos -->
+                                                @if($role=== 'admin')
+                                                <!-- Card Admin: Pacientes -->
+                                                <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+                                                    <div class="card">
+                                                        <div class="card-body text-center">
+                                                            <a href="{{ route('pacientes') }}">
+                                                                <i class="fas fa-user-md fa-3x mb-3"></i>
+                                                                <h5 class="card-title">Pacientes</h5>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Card Admin: Especialistas -->
+                                                <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+                                                    <div class="card">
+                                                        <div class="card-body text-center">
+                                                            <a href="{{ route('especialistas') }}">
+                                                                <i class="fas fa-user-nurse fa-3x mb-3"></i>
+                                                                <h5 class="card-title">Especialistas</h5>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Card Admin: Dispositivos -->
+                                                <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+                                                    <div class="card">
+                                                        <div class="card-body text-center">
+                                                            <a href="{{ route('dispositivos') }}">
+                                                                <i class="fas fa-laptop-medical fa-3x mb-3"></i>
+                                                                <h5 class="card-title">Dispositivos</h5>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @endif
+                                                @if($role=== 'user')
+                                                <!-- Card Admin/User: Procedimientos -->
+                                                <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+                                                    <div class="card">
+                                                        <div class="card-body text-center">
+                                                            <a href="{{ route('procedimientos') }}">
+                                                                <i class="fas fa-procedures fa-3x mb-3"></i>
+                                                                <h5 class="card-title">Procedimientos</h5>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+
+
                             </div>
                         </div>
                     </div>

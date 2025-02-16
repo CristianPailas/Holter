@@ -17,7 +17,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         route::get('pacientes', pacientesIndex::class)->name('pacientes');
         route::get('especialistas', especialistaIndex::class)->name('especialistas');
         route::get('dispositivos', equiposIndex::class)->name('dispositivos');
-        route::get('procedimientos', procedimientosIndex::class)->name('procedimientos');
     });
     Route::middleware(['auth:sanctum', 'role:user'])->group(function () {
         route::get('procedimientos', procedimientosIndex::class)->name('procedimientos');

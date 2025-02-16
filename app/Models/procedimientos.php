@@ -8,18 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class procedimientos extends Model
 {
     use HasFactory;
+    protected $table = 'procedimientos';
+    protected $primaryKey = 'id';
 
     protected $fillable = [
-        /* 'nombre',
-        'descripcion',
-        'fecha',
-        'email',
-        'role', */
-        'id',
+        'fecha_ini',
+        'fecha_fin',
+        'duracion',
         'edad',
-        'genero',
-        'fecha_nacimiento',
-        
-        
+        'paciente_id',
+        'dispositivo_id',
+        'especialista_id',
+        'estado_proc',
+        'observaciones',
     ];
 }

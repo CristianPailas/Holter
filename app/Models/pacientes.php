@@ -12,14 +12,13 @@ class pacientes extends Model
     protected $table = 'pacientes';
     protected $primaryKey = 'id';
     protected $fillable = [
-      
         'nombres',
         'apellidos',
-        'genero',
         'identificacion',
+        'genero',
         'fecha_nacimiento',
-        'edad',
-        'direccion'
-
+        'direccion',
+        'celular',
+        'estado_pcte'
     ];
 }

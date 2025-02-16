@@ -74,8 +74,9 @@
                                     <select wire:model="estado" class="form-control">
                                         <option value="" default>Seleccione</option>
                                         <option value="Operativo">Operativo</option>
-                                        <option value="Fuera de servicio">Fuera de Servicio</option>
-                                        <option value="En reparación">En Reparación</option>
+                                        <option value="Fuera de Servicio">Fuera de Servicio</option>
+                                        <option value="En Reparación">En Reparación</option>
+                                        <option value="En Uso">En Uso</option>
                                     </select>
                                     @error('estado')
                                     <span class="text-danger">{{ $message }}</span>
@@ -85,7 +86,7 @@
 
                                 <div class="modal-footer d-flex justify-content-end">
                                     <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="submit" class="btn btn-primary ms-2">Guardar Paciente</button>
+                                    <button type="submit" class="btn btn-primary ms-2">Guardar Dispositivo</button>
                                 </div>
                             </form>
 
@@ -185,8 +186,10 @@
                                     <table class="table align-items-center mb-0">
                                         <thead>
                                             <tr>
-
-
+                                                <th
+                                                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                    Número de Serie
+                                                </th>
                                                 <th
                                                     class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                     Modelo
@@ -194,10 +197,6 @@
                                                 <th
                                                     class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                     Fabricante
-                                                </th>
-                                                <th
-                                                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                    Número de Serie
                                                 </th>
                                                 <th
                                                     class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -213,8 +212,11 @@
                                         <tbody>
                                             @foreach ($listadoDispositivos as $dispositivo)
                                             <tr>
-
-
+                                                <td class="text-center">
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ $dispositivo->numero_serie }}
+                                                    </p>
+                                                </td>
                                                 <td class="text-center">
                                                     <p class="text-xs font-weight-bold mb-0">
                                                         {{ $dispositivo->modelo }}
@@ -225,11 +227,7 @@
                                                         {{ $dispositivo->fabricante }}
                                                     </p>
                                                 </td>
-                                                <td class="text-center">
-                                                    <p class="text-xs font-weight-bold mb-0">
-                                                        {{ $dispositivo->numero_serie }}
-                                                    </p>
-                                                </td>
+
 
                                                 <td class="text-center">
                                                     <p class="text-xs font-weight-bold mb-0">
@@ -263,7 +261,7 @@
                                                             <h5 class="modal-title" id="exampleModalLiveLabel">
                                                                 Eliminar
                                                                 dispositivo: <b class="text-danger">
-                                                                    {{ $dispositivoEliminar->modelo }}</b></h5>
+                                                                    {{ $dispositivoEliminar->numero_serie }}</b></h5>
 
 
                                                         </div>

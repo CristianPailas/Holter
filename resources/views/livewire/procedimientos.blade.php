@@ -1,7 +1,6 @@
 <div>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.addEventListener('procedimientoCreado', (event) => {
+        document.addEventListener('ProcedimientoCreado', (event) => {
             let data = event.detail;
             console.log(data);
             Swal.fire({
@@ -12,7 +11,18 @@
             });
         });
 
-        document.addEventListener('procedimientoEliminado', (event) => {
+        document.addEventListener('ProcedimientoEliminado', (event) => {
+            let data = event.detail;
+            console.log(data);
+            Swal.fire({
+                title: data.title,
+                text: data.text,
+                icon: data.type,
+                confirmButtonText: 'Ok'
+            });
+        });
+
+        document.addEventListener('ProcedimientoError', (event) => {
             let data = event.detail;
             console.log(data);
             Swal.fire({
@@ -39,10 +49,49 @@
                             <div class="card p-4" style="width: 500%; max-width: 1000px;">
                                 <h1 class="text-center mb-4">Nuevo Procedimiento</h1>
 
-                                <form wire:submit.prevent="submit">
+                                <form wire:submit.prevent="crearProcedimiento">
+                                    <div class="row mb-3">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Fecha Inicio</label>
+                                                <input type="datetime-local" wire:model="fecha_ini" class="form-control">
+                                                @error('fecha_ini')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Fecha Final</label>
+                                                <input type="datetime-local" wire:model="fecha_fin" class="form-control">
+                                                @error('fecha_fin')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Duracion (horas)</label>
+                                                <input type="text" wire:model="duracion" class="form-control">
+                                                @error('duracion')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Edad (años)</label>
+                                                <input type="number" wire:model="edad" class="form-control">
+                                                @error('edad')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="form-group">
-                                        <label>Nombre</label>
-                                        <select class="form-control" name="choices-button" id="choices-button" wire:change="datosPacienteSeleccionado($event.target.value)">
+                                        <label>Paciente</label>
+                                        <select class="form-control" wire:model="paciente_id" name="choices-button" id="choices-button" wire:change="datosSeleccion($event.target.value,'pacientes')">
                                             <option value="0" selected="">Seleccione un paciente</option>
                                             @foreach ($listaPacientes as $paciente)
                                             <option value="{{ $paciente->id }}">{{ $paciente->nombres }} {{ $paciente->apellidos }}</option>
@@ -50,38 +99,53 @@
                                         </select>
                                     </div>
 
-                                    @if ($pacienteSeleccionado)
                                     <div class="form-group">
-                                        <label>Número de Identificación</label>
-                                        <input type="text" class="form-control" value="{{$datosPaciente->identificacion}}">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label>Celular</label>
-                                                    <input type="text" class="form-control" value="{{$datosPaciente->contactos}}">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label>Sexo</label>
-                                                    <input type="text" class="form-control" value="{{$datosPaciente->genero}}">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label>Fecha de nacimiento</label>
-                                                    <input type="text" class="form-control" value="{{$datosPaciente->fecha_nacimiento}}">
-                                                </div>
+                                        <label>Especialista</label>
+                                        <select class="form-control" wire:model="especialista_id" name="choices-button" id="choices-button" wire:change="datosSeleccion($event.target.value,'especialistas')">
+                                            <option value="0" selected="">Seleccione un especialista</option>
+                                            @foreach ($listaEspecialistas as $esp)
+                                            <option value="{{ $esp->id }}">{{ $esp->nombres }} {{ $esp->apellidos }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Dispositivo</label>
+                                                <select class="form-control" wire:model="dispositivo_id" name="choices-button" id="choices-button" wire:change="datosSeleccion($event.target.value,'dispositivos')">
+                                                    <option value="0" selected="">Seleccione un dispositivo</option>
+                                                    @foreach ($listaDispositivos as $disp)
+                                                    <option value="{{ $disp->id }}">{{ $disp->numero_serie}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
-                                        @endif
-
-
-
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()" data-bs-dismiss="modal">Cerrar</button>
-                                            <button type="submit" class="btn bg-gradient-primary">Guardar</button>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Estado</label>
+                                                <select class="form-control" wire:model="estado_proc" name="choices-button" id="choices-button">
+                                                    <option value="0" selected="">Seleccione...</option>
+                                                    <option value="ABIERTO">ABIERTO</option>
+                                                    <option value="CERRADO">CERRADO</option>
+                                                    <option value="CANCELADO">CANCELADO</option>
+                                                </select>
+                                                @error('estado_proc')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
                                         </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Observaciones</label>
+                                        <textarea class="form-control" wire:model="observaciones" cols="80" rows="3"></textarea>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="submit" class="btn bg-gradient-primary">Guardar</button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -177,13 +241,22 @@
                                                         ID
                                                     </th>
                                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                        nombre
+                                                        Paciente
                                                     </th>
                                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                        correo
+                                                        Edad
                                                     </th>
                                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                        identification
+                                                        Fecha Inicial
+                                                    </th>
+                                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                        Fecha Final
+                                                    </th>
+                                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                        Dispositivo
+                                                    </th>
+                                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                        Estado
                                                     </th>
                                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                         Action
@@ -191,26 +264,40 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($listaPacientes as $procedimiento)
+                                                @foreach ($listadoProcedimientos as $procedimiento)
                                                 <tr>
                                                     <td class="text-center">
-                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->ID }}</p>
+                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->id }}</p>
                                                     </td>
                                                     <td class="text-center">
-                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->nombre }}</p>
+                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->identificacion }} - {{ $procedimiento->nombres }} {{ $procedimiento->apellidos }} </p>
                                                     </td>
                                                     <td class="text-center">
-                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->correo }}</p>
+                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->edad }}</p>
                                                     </td>
                                                     <td class="text-center">
-                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->identificacion }}</p>
+                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->fecha_ini }}</p>
                                                     </td>
-
-
+                                                    <td class="text-center">
+                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->fecha_fin }}</p>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->numero_serie }}</p>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span class="badge
+                                                            @if($procedimiento->estado_proc == 'ABIERTO') bg-warning text-dark
+                                                            @elseif($procedimiento->estado_proc == 'CERRADO') bg-success
+                                                            @elseif($procedimiento->estado_proc == 'CANCELADO') bg-danger
+                                                            @endif">
+                                                            {{ $procedimiento->estado_proc }}
+                                                        </span>
+                                                    </td>
                                                     <td class="text-center">
                                                         <a href="#" class="mx-3" data-bs-toggle="tooltip"
                                                             data-bs-original-title="Editar"
-                                                            wire:click="editar({{ $procedimiento->id }})">
+                                                            wire:click="editar({{ $procedimiento->id }})"
+                                                            title="Row: {{$procedimiento->id}}">
                                                             <i class="fas fa-user-edit text-secondary"></i>
                                                         </a>
                                                         <span>
@@ -233,7 +320,7 @@
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="exampleModalLiveLabel">Eliminar
                                                                 procedimiento:
-                                                                <b class="text-danger">{{ $procedimientoEliminar->nombre }}</b>
+                                                                <b class="text-danger">{{ $procedimientoEliminar->id }}</b>
                                         </h5>
                                     </div>
                                     <div class="modal-body">

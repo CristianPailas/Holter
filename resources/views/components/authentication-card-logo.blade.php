@@ -1,1 +1,1 @@
-<h5>Gestión de Holters</h5>
+<img src="./assets/img/pulse_heart.png" alt="Holters App">

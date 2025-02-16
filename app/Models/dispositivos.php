@@ -12,8 +12,8 @@ class dispositivos extends Model
     protected $primaryKey = "id";
     protected $fillable = [
         'modelo',
-        'numero_serie',
         'fabricante',
+        'numero_serie',
         'estado',
     ];
 }

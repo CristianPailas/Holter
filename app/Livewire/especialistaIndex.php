@@ -22,9 +22,10 @@ class especialistaIndex extends Component
     public $modalDelete = false;
     public $EspecialistaEliminar;
     public $id;
+    public $updateModal = false;
 
     #[Validate('required', as: 'nombre', message: 'El :attribute es obligatorio')]
-    public $nombre;
+    public $nombres;
 
     #[Validate('required', as: 'apellidos', message: 'Los :attribute son obligatorios')]
     public $apellidos;
@@ -41,12 +42,11 @@ class especialistaIndex extends Component
     #[Validate('required', as: 'especialidad', message: 'La :attribute es obligatoria')]
     public $especialidad;
 
-    #[Validate('required', as: 'experiencia', message: 'La :attribute es obligatoria')]
-    public $experiencia;
-
     #[Validate('required', as: 'Contacto', message: 'El :attribute es obligatorio')]
     public $contacto;
 
+    #[Validate('required', as: 'estado_esp', message: 'El :attribute es obligatoria')]
+    public $estado_esp;
 
 
 
@@ -65,20 +65,23 @@ class especialistaIndex extends Component
     {
         $this->especialista = $id;
         $this->modal = true;
-        $this->estadoModal = "Editar datos del especialista";
+        $this->updateModal = true;
+        $this->estadoModal = "Editar Datos del Especialista";
         $datosEspecialista = especialistas::findOrFail($id);
-        $this->nombre = strtoupper($datosEspecialista['nombre']);
+
+        $this->nombres = strtoupper($datosEspecialista['nombres']);
         $this->apellidos = strtoupper($datosEspecialista['apellidos']);
         $this->correo = $datosEspecialista['correo'];
         $this->contrasena = $datosEspecialista['contrasena'];
         $this->identification = $datosEspecialista['identification'];
-        $this->experiencia = $datosEspecialista['experiencia'];
         $this->contacto = $datosEspecialista['contacto'];
         $this->especialidad = $datosEspecialista['especialidad'];
+        $this->estado_esp = $datosEspecialista['estado_esp'];
     }
 
     public function cerrar()
     {
+        $this->updateModal = false;
         $this->reset(['modal', 'modalDelete']);
     }
 
@@ -86,52 +89,52 @@ class especialistaIndex extends Component
     {
         $this->estadoModal = "Crear nuevo especialista";
         $this->modal = true;
+        $this->updateModal = false;
     }
 
     public function crearEspecialistas()
     {
-        #dd($this->nombre, $this->apellidos, $this->correo, $this->contrasena,$this->identification,$this->especialidad,$this->experiencia,$this->contacto);
         if ($this->validate()) {
-
-            $especialistas = new especialistas();
-            $datosEspecialista['id'] = $this->id;
-            $datosEspecialista['nombre'] = strtoupper($this->nombre);
-            $datosEspecialista['apellidos'] = strtoupper($this->apellidos);
-            $datosEspecialista['correo'] = $this->correo;
-            $datosEspecialista['contrasena'] = $this->contrasena;
-            $datosEspecialista['identification'] = $this->identification;
-            $datosEspecialista['especialidad'] = $this->especialidad;
-            $datosEspecialista['experiencia'] = $this->experiencia;
-            $datosEspecialista['contacto'] = $this->contacto;
-
-
             try {
-                $newUser = new User();
-                $newUser->name = strtoupper($this->nombre) . " " . strtoupper($this->apellidos);
-                $newUser->email = $this->correo;
-                $newUser->password = Hash::make($this->contrasena);
-                $newUser->role = 'admin';
-                $newUser->save();
-                if ($especialistas::updateOrCreate(
+                $especialista = especialistas::updateOrCreate(
+                    ['correo' => $this->correo],
                     [
-                        'id' => $datosEspecialista['id']
-                    ],
-                    $datosEspecialista
-                )) {
-                    $this->reset();
-                    $this->dispatch('EspecialistaCrear', type: 'success', title: 'Registro exitoso', text: 'El especialista se ha guardado correctamente');
+                        'nombres' => strtoupper($this->nombres),
+                        'apellidos' => strtoupper($this->apellidos),
+                        'correo' => $this->correo,
+                        'contrasena' => $this->contrasena,
+                        'identification' => $this->identification,
+                        'especialidad' => $this->especialidad,
+                        'contacto' => $this->contacto,
+                        'estado_esp' => $this->estado_esp,
+                    ]
+                );
+
+                if (!$this->updateModal) {
+                    $newUser = User::firstOrCreate(
+                        ['email' => $this->correo],
+                        [
+                            'name' => strtoupper($this->nombres) . " " . strtoupper($this->apellidos),
+                            'password' => Hash::make($this->contrasena),
+                            'role' => 'admin'
+                        ]
+                    );
                 }
+
+                $this->reset();
+                $this->dispatch('EspecialistaCrear', type: 'success', title: 'Registro exitoso', text: 'El especialista se ha guardado correctamente');
             } catch (ValidationException $e) {
-                $this->dispatch('EspecialistaError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
+                $this->dispatch('EspecialistaError', type: 'error', title: 'Error', text: $e->getMessage());
             } catch (QueryException $e) {
                 Log::error('Error de consulta en la base de datos: ' . $e->getMessage());
-                $this->dispatch('EspecialistaError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
+                $this->dispatch('EspecialistaError', type: 'error', title: 'Error', text: 'Error en la base de datos');
             } catch (Exception $e) {
                 Log::error('Error en el servidor: ' . $e->getMessage());
-                $this->dispatch('EspecialistaError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
+                $this->dispatch('EspecialistaError', type: 'error', title: 'Error', text: 'Error en el servidor');
             }
         }
     }
+
     public function confirmarEliminar($id)
     {
         $this->modalDelete = true;
@@ -143,7 +146,6 @@ class especialistaIndex extends Component
 
     public function eliminar($id)
     {
-
         if (especialistas::destroy($this->id)) {
             $this->reset();
             $this->dispatch('EspecialistaEliminar', type: 'success', title: 'Eliminado', text: 'El especialista se ha eliminado correctamente');
