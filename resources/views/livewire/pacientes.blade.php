@@ -324,7 +324,7 @@
                                                     <i class="fas fa-user-edit text-secondary"></i>
                                                 </a>
                                                 <span>
-                                                    <i class="cursor-pointer fas fa-trash text-secondary"
+                                                    <i class="cursor-pointer fas fa-trash text-danger"
                                                         wire:click="confirmarEliminar({{ $paciente->id }})"
                                                         data-bs-original-title="Eliminar"></i>
                                                 </span>

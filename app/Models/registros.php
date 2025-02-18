@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class registros extends Model
+class Registros extends Model
 {
     use HasFactory;
 
@@ -18,10 +18,9 @@ class registros extends Model
         'hora_fc_min',
         'fc_max',
         'hora_fc_max',
-        'rc_medio',
+        'fc_medio',
         'total_latidos',
         'vent_total',
         'supr_total',
-        'procedimiento_id',
     ];
 }

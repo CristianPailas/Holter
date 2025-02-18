@@ -2,8 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\especialistas;
-use App\Models\user;
 use Dotenv\Exception\ValidationException;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -11,9 +9,11 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
+use App\Models\Especialistas;
+use App\Models\User;
 
 
-class especialistaIndex extends Component
+class EspecialistaIndex extends Component
 {
     public $listadoEspecialistas = [];
     public $modal = false;
@@ -143,12 +143,22 @@ class especialistaIndex extends Component
         $this->id = $id;
     }
 
-
     public function eliminar($id)
     {
-        if (especialistas::destroy($this->id)) {
-            $this->reset();
-            $this->dispatch('EspecialistaEliminar', type: 'success', title: 'Eliminado', text: 'El especialista se ha eliminado correctamente');
+        if (!$id == $this->id) return;
+        try {
+            if (especialistas::destroy($this->id)) {
+                $this->reset();
+                $this->dispatch('EspecialistaEliminar', type: 'success', title: 'Eliminado', text: 'El especialista se ha eliminado correctamente');
+            }
+        } catch (ValidationException $e) {
+            $this->dispatch('EspecialistaError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
+        } catch (QueryException $e) {
+            Log::error('Error de consulta en la base de datos: ' . $e->getMessage());
+            $this->dispatch('EspecialistaError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Error en el servidor: ' . $e->getMessage());
+            $this->dispatch('EspecialistaError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
         }
     }
 }

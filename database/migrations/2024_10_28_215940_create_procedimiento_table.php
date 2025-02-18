@@ -25,9 +25,9 @@ return new class extends Migration
             $table->enum('estado_proc', ['ABIERTO', 'CERRADO', 'CANCELADO'])->default('ABIERTO');
             $table->timestamps();
 
-            $table->foreign('paciente_id')->references('id')->on('pacientes')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('dispositivo_id')->references('id')->on('dispositivos')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('especialista_id')->references('id')->on('especialistas')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('paciente_id')->references('id')->on('pacientes');
+            $table->foreign('dispositivo_id')->references('id')->on('dispositivos');
+            $table->foreign('especialista_id')->references('id')->on('especialistas');
         });
     }
 

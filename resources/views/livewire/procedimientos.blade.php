@@ -35,7 +35,7 @@
     </script>
 
     <div>
-        @if ($modal)
+        @if ($modalNuevo)
         {{-- MODAL --}}
         <div class="modal-backdrop fade show"></div>
         <div class="modal fade show" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -47,7 +47,7 @@
                         <div class="container d-flex justify-content-center align-items-center"
                             style="min-height: 100vh;">
                             <div class="card p-4" style="width: 500%; max-width: 1000px;">
-                                <h1 class="text-center mb-4">Nuevo Procedimiento</h1>
+                                <h1 class="text-center mb-4">{{$estadoModal}}</h1>
 
                                 <form wire:submit.prevent="crearProcedimiento">
                                     <div class="row mb-3">
@@ -227,7 +227,7 @@
                                         <div>
                                             <h5 class="mb-0">Procedimientos</h5>
                                         </div>
-                                        <button type="button" wire:click="NuevoProcedimiento" class="btn bg-gradient-primary">
+                                        <button type="button" wire:click="creacion" class="btn bg-gradient-primary">
                                             Nuevo Procedimiento
                                         </button>
                                     </div>
@@ -293,18 +293,31 @@
                                                             {{ $procedimiento->estado_proc }}
                                                         </span>
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td class="text-right">
+                                                        <span>
+                                                            <i class="cursor-pointer fas fa-trash text-danger"
+                                                                wire:click="confirmarEliminar({{ $procedimiento->id }})"
+                                                                data-bs-original-title="Eliminar"></i>
+                                                        </span>
                                                         <a href="#" class="mx-3" data-bs-toggle="tooltip"
                                                             data-bs-original-title="Editar"
                                                             wire:click="editar({{ $procedimiento->id }})"
                                                             title="Row: {{$procedimiento->id}}">
                                                             <i class="fas fa-user-edit text-secondary"></i>
                                                         </a>
-                                                        <span>
-                                                            <i class="cursor-pointer fas fa-trash text-secondary"
-                                                                wire:click="confirmarEliminar({{ $procedimiento->id }})"
-                                                                data-bs-original-title="Eliminar"></i>
-                                                        </span>
+                                                        @if($procedimiento->estado_proc == 'ABIERTO')
+                                                        <a href="#" class="mx-3" data-bs-toggle="tooltip"
+                                                            data-bs-original-title="Masivo"
+                                                            wire:click="registrosHolterExcel({{ $procedimiento->id }})"
+                                                            title="Row: {{$procedimiento->id}}">
+                                                            <i class="fas fa-file-excel text-secondary"></i>
+                                                        </a>
+                                                        @elseif($procedimiento->estado_proc == 'CERRADO')
+                                                        <a href="{{ route('registros', $procedimiento->id) }}" class="mx-3"
+                                                            title="Row: {{ $procedimiento->id }}">
+                                                            <i class="fas fa-heartbeat text-secondary"></i>
+                                                        </a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -313,14 +326,14 @@
                                         {{-- Modal para confirmar eliminación --}}
                                         {{-- @if ($modalDelete)
                                             <div class="modal fade show" id="exampleModalLive" tabindex="-1"
-                                                aria-labelledby="exampleModalLiveLabel" style="display: block;"
-                                                aria-modal="true" role="dialog">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLiveLabel">Eliminar
-                                                                procedimiento:
-                                                                <b class="text-danger">{{ $procedimientoEliminar->id }}</b>
+                                            aria-labelledby="exampleModalLiveLabel" style="display: block;"
+                                            aria-modal="true" role="dialog">
+                                            <div class="modal-dialog">
+                                            <div class="modal-content">
+                                            <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLiveLabel">Eliminar
+                                                procedimiento:
+                                                <b class="text-danger">{{ $procedimientoEliminar->id }}</b>
                                         </h5>
                                     </div>
                                     <div class="modal-body">
@@ -340,11 +353,250 @@
                             </div>
                         </div>
                         <div class="modal-backdrop fade show"></div>
-                        @endif
 
+                        @endif
                     </div> --}}
+                    {{-- Modal para confirmar eliminación --}}
+
+                    @if ($modalRegistros)
+                    {{-- MODAL_REGISTROS --}}
+                    <div class="modal-backdrop fade show"></div>
+                    <div class="modal fade show" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                        aria-modal="true" style="display: block; padding-left: 0px;">
+                        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-body">
+                                    <div class="container d-flex justify-content-center align-items-center"
+                                        style="min-height: 100vh;">
+                                        <div class="card p-4" style="width: 500%; max-width: 1000px;">
+                                            <h1 class="text-center mb-4">{{$estadoModal}}</h1>
+
+                                            <div class="card shadow-sm mb-4">
+                                                <div class="card-body">
+                                                    <h5 class="card-title text-primary">Detalles del Procedimiento</h5>
+                                                    <div class="row">
+
+                                                        @foreach($dataProcedimiento as $proc)
+                                                        <div class="col-md-6">
+                                                            <p class="mb-1"><strong>Paciente:</strong> {{$proc->identificacion}} - {{$proc->nombres}} {{$proc->apellidos}}</p>
+                                                            <p class="mb-1"><strong>Edad:</strong> {{$proc->edad}} años</p>
+                                                            <p class="mb-1"><strong>Fecha Inicio:</strong> {{$proc->fecha_ini}}</p>
+                                                            <p class="mb-1"><strong>Fecha Fin:</strong> {{$proc->fecha_fin}} aprox.</p>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <p class="mb-1"><strong>Procedimiento No:</strong> 000{{$proc->id}}</p>
+                                                            <p class="mb-1"><strong>Dispositivo:</strong> {{$proc->numero_serie}}</p>
+                                                            <p class="mb-1"><strong>Duracion:</strong> {{$proc->duracion}} horas</p>
+                                                            <p class="mb-1">
+                                                                <strong>Estado:</strong>
+                                                                <span class="badge
+                                                                    @if($proc->estado_proc == 'ABIERTO') bg-warning text-dark
+                                                                    @elseif($proc->estado_proc == 'CERRADO') bg-success
+                                                                    @elseif($proc->estado_proc == 'CANCELADO') bg-danger
+                                                                    @endif">{{$proc->estado_proc}}</span>
+                                                            </p>
+                                                        </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- startForm-->
+                                            <form wire:submit.prevent="crearRegistrosHolter">
+                                                <input type="hidden" name="procedimiento_id" value="{{$id}}">
+                                                <div class="form-group">
+                                                    <label>Hora</label>
+                                                    <input type="time" wire:model="hora" class="form-control">
+                                                    @error('hora')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>FC Min</label>
+                                                            <input type="text" wire:model="fc_min" class="form-control">
+                                                            @error('fc_min')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Hora FC Min</label>
+                                                            <input type="time" wire:model="hora_fc_min" class="form-control">
+                                                            @error('hora_fc_min')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>FC Max</label>
+                                                            <input type="text" wire:model="fc_max" class="form-control">
+                                                            @error('fc_max')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Hora FC Max</label>
+                                                            <input type="time" wire:model="hora_fc_max" class="form-control">
+                                                            @error('hora_fc_max')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>FC Medio</label>
+                                                            <input type="text" wire:model="fc_medio" class="form-control">
+                                                            @error('fc_medio')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Total Latidos</label>
+                                                            <input type="text" wire:model="total_latidos" class="form-control">
+                                                            @error('total_latidos')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Total Eventos Ventriculares</label>
+                                                            <input type="text" wire:model="vent_total" class="form-control">
+                                                            @error('vent_total')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Total Eventos Supraventriculares</label>
+                                                            <input type="text" wire:model="supr_total" class="form-control">
+                                                            @error('supr_total')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()" data-bs-dismiss="modal">Cerrar</button>
+                                                    <button type="submit" class="btn bg-gradient-primary">Registrar</button>
+                                                </div>
+                                            </form>
+                                            <!-- endForm-->
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- MODAL_REGISTROS --}}
+                    @endif
+
+
+                    @if ($modalRegistrosExcel)
+                    {{-- MODAL_REGISTROS_EXCEL --}}
+                    <div class="modal-backdrop fade show"></div>
+                    <div class="modal fade show" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                        aria-modal="true" style="display: block; padding-left: 0px;">
+                        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                            <div class="modal-content">
+
+                                <div class="modal-body">
+                                    <div class="container d-flex justify-content-center align-items-center"
+                                        style="min-height: 100vh;">
+                                        <div class="card p-4" style="width: 500%; max-width: 1000px;">
+                                            <h1 class="text-center mb-4">{{$estadoModal}}</h1>
+
+                                            <div class="card shadow-sm mb-4">
+                                                <div class="card-body">
+                                                    <h5 class="card-title text-primary">Detalles del Procedimiento</h5>
+                                                    <div class="row">
+
+                                                        @foreach($dataProcedimiento as $proc)
+                                                        <div class="col-md-6">
+                                                            <p class="mb-1"><strong>Paciente:</strong> {{$proc->identificacion}} - {{$proc->nombres}} {{$proc->apellidos}}</p>
+                                                            <p class="mb-1"><strong>Edad:</strong> {{$proc->edad}} años</p>
+                                                            <p class="mb-1"><strong>Fecha Inicio:</strong> {{$proc->fecha_ini}}</p>
+                                                            <p class="mb-1"><strong>Fecha Fin:</strong> {{$proc->fecha_fin}} aprox.</p>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <p class="mb-1"><strong>Procedimiento No:</strong> 000{{$proc->id}}</p>
+                                                            <p class="mb-1"><strong>Dispositivo:</strong> {{$proc->numero_serie}}</p>
+                                                            <p class="mb-1"><strong>Duracion:</strong> {{$proc->duracion}} horas</p>
+                                                            <p class="mb-1">
+                                                                <strong>Estado:</strong>
+                                                                <span class="badge
+                                                                    @if($proc->estado_proc == 'ABIERTO') bg-warning text-dark
+                                                                    @elseif($proc->estado_proc == 'CERRADO') bg-success
+                                                                    @elseif($proc->estado_proc == 'CANCELADO') bg-danger
+                                                                    @endif">{{$proc->estado_proc}}</span>
+                                                            </p>
+                                                        </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- startForm-->
+                                            <form wire:submit.prevent="crearRegistrosHolterExcel" enctype="multipart/form-data">
+                                                <input type="hidden" name="procedimiento_id" value="{{ $id }}">
+
+                                                <div class="form-group">
+                                                    <label>Importar [xlsx, xls, csv]</label>
+                                                    <input
+                                                        type="file"
+                                                        wire:model="csv_file"
+                                                        class="form-control @error('csv_file') is-invalid @enderror"
+                                                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                                        name="csv_file"
+                                                        data-max-file-size="2M"
+                                                        required>
+                                                    @error('csv_file')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn bg-gradient-secondary" wire:click="cerrar()" data-bs-dismiss="modal">Cerrar</button>
+                                                    @if(!$cerrarCaso)
+                                                    <!-- Botón Importar -->
+                                                    <button type="submit" class="btn bg-gradient-primary">Importar</button>
+                                                    @else
+                                                    <!-- Botón Cerrar Procedimiento -->
+                                                    <a href="#" class="btn bg-gradient-danger" wire:click="cerrarProcedimiento({{ $id }})">
+                                                        Cerrar Procedimiento
+                                                    </a>
+                                                    @endif
+                                                </div>
+                                            </form>
+                                            <!-- endForm-->
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- MODAL_REGISTROS_EXCEL --}}
+                    @endif
                 </div>
     </div>
+</div>
 </div>
 </div>
 </div>

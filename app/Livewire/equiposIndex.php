@@ -3,10 +3,14 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Models\dispositivos;
+use Dotenv\Exception\ValidationException;
+use Exception;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Validate;
+use App\Models\Dispositivos;
 
-class equiposIndex extends Component
+class EquiposIndex extends Component
 {
     public $listadoDispositivos = [];
 
@@ -96,16 +100,25 @@ class equiposIndex extends Component
     {
         $this->modalDelete = true;
         $this->dispositivoEliminar = dispositivos::find($id);
-        # dd($this->dispositivoEliminar);
         $this->id = $id;
     }
 
     public function eliminar($id)
     {
-
-        if (dispositivos::destroy($this->id)) {
-            $this->reset();
-            $this->dispatch('DispositivoEliminado', type: 'success', title: 'Eliminado', text: 'El dispositivo se ha eliminado correctamente');
+        if (!$id == $this->id) return;
+        try {
+            if (dispositivos::destroy($this->id)) {
+                $this->reset();
+                $this->dispatch('DispositivoEliminado', type: 'success', title: 'Eliminado', text: 'El dispositivo se ha eliminado correctamente');
+            }
+        } catch (ValidationException $e) {
+            $this->dispatch('DispositivoError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
+        } catch (QueryException $e) {
+            Log::error('Error de consulta en la base de datos: ' . $e->getMessage());
+            $this->dispatch('DispositivoError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Error en el servidor: ' . $e->getMessage());
+            $this->dispatch('DispositivoError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
         }
     }
 }

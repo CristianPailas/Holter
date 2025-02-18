@@ -5,7 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
-class dashboardIndex extends Component
+class DashboardIndex extends Component
 {
     public $listadoDispositivos = [];
     public $user;

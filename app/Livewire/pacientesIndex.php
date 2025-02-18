@@ -2,15 +2,15 @@
 
 namespace App\Livewire;
 
-use App\Models\pacientes;
 use Dotenv\Exception\ValidationException;
-use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
-use Livewire\Component;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
+use Exception;
+use App\Models\Pacientes;
 
-class pacientesIndex extends Component
+class PacientesIndex extends Component
 {
 
     #[Validate('required', as: 'nombree',  message: 'El :attribute es obligatorio')]
@@ -123,9 +123,20 @@ class pacientesIndex extends Component
 
     public function eliminar($id)
     {
-        if (pacientes::destroy($this->id)) {
-            $this->reset();
-            $this->dispatch('PacienteEliminado', type: 'success', title: 'Eliminado', text: 'El paciente se ha eliminado correctamente');
+        if (!$id == $this->id) return;
+        try {
+            if (pacientes::destroy($this->id)) {
+                $this->reset();
+                $this->dispatch('PacienteEliminado', type: 'success', title: 'Eliminado', text: 'El paciente se ha eliminado correctamente');
+            }
+        } catch (ValidationException $e) {
+            $this->dispatch('PacienteError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
+        } catch (QueryException $e) {
+            Log::error('Error de consulta en la base de datos: ' . $e->getMessage());
+            $this->dispatch('PacienteError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Error en el servidor: ' . $e->getMessage());
+            $this->dispatch('PacienteError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
         }
     }
 }

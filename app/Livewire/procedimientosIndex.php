@@ -3,20 +3,24 @@
 namespace App\Livewire;
 
 use App\Http\Controllers\ProcedimientosController;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\Attributes\Validate;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Carbon\Carbon;
 use Dotenv\Exception\ValidationException;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
-use App\Models\dispositivos;
-use App\Models\especialistas;
-use App\Models\pacientes;
-use App\Models\procedimientos;
-use Livewire\Attributes\Validate;
-use Livewire\Component;
+use App\Models\Dispositivos;
+use App\Models\Especialistas;
+use App\Models\Pacientes;
+use App\Models\Procedimientos;
+use App\Models\Registros;
 
-class procedimientosIndex extends Component
+class ProcedimientosIndex extends Component
 {
+    use WithFileUploads;
     public $listaPacientes = [];
     public $listaEspecialistas = [];
     public $listaDispositivos = [];
@@ -44,16 +48,24 @@ class procedimientosIndex extends Component
     public $observaciones;
 
     public $listadoProcedimientos;
-    public $modal = false;
+    public $modalNuevo = false;
+    public $modalDelete = false;
+    public $modalRegistros = false;
+    public $modalRegistrosExcel = false;
     public $estadoModal;
     public $datosProcediminto;
     public $id;
-    public $modalDelete = false;
     public $procedimientoEliminar;
+
+    public $dataProcedimiento = [];
+    public $csv_file;
+    public $hora, $fc_min, $hora_fc_min, $fc_max, $hora_fc_max;
+    public $fc_medio, $total_latidos, $vent_total, $supr_total;
+    public $cerrarCaso = false;
 
     public function listarProcedimientos()
     {
-        $proc = procedimientos::join('pacientes', 'procedimientos.paciente_id', '=', 'pacientes.id')
+        $proc = Procedimientos::join('pacientes', 'procedimientos.paciente_id', '=', 'pacientes.id')
             ->join('dispositivos', 'procedimientos.dispositivo_id', '=', 'dispositivos.id')
             ->select('procedimientos.*', 'pacientes.identificacion', 'pacientes.nombres', 'pacientes.apellidos', 'dispositivos.numero_serie')
             ->orderBy('procedimientos.id')
@@ -69,7 +81,6 @@ class procedimientosIndex extends Component
     public function NuevoProcedimiento()
     {
         $procedimientos = new ProcedimientosController();
-
         $lista = $procedimientos->NuevoProcedimiento();
         foreach ($lista['pacientes'] as $key => $pcte) {
             $this->listaPacientes[$key] = $pcte;
@@ -80,22 +91,21 @@ class procedimientosIndex extends Component
         foreach ($lista['dispositivos'] as $key => $disp) {
             $this->listaDispositivos[$key] = $disp;
         }
-        $this->modal = true;
     }
 
     public function datosSeleccion($id, $model)
     {
         switch ($model) {
             case 'pacientes':
-                $this->datosPaciente = pacientes::find($id);
+                $this->datosPaciente = Pacientes::find($id);
                 $n = $this->datosPaciente->fecha_nacimiento;
                 $this->calcEdadPcte($n);
                 break;
             case 'especialistas':
-                $this->datosEspecialista = especialistas::find($id);
+                $this->datosEspecialista = Especialistas::find($id);
                 break;
             case 'dispositivos':
-                $this->datosDispositivo = dispositivos::find($id);
+                $this->datosDispositivo = Dispositivos::find($id);
                 break;
         }
     }
@@ -108,14 +118,18 @@ class procedimientosIndex extends Component
 
     public function cerrar()
     {
-        $this->modal = false;
+        $this->modalNuevo = false;
         $this->modalDelete = false;
+        $this->modalRegistros = false;
+        $this->modalRegistrosExcel = false;
+        $this->reset(['csv_file']);
     }
 
     public function creacion()
     {
         $this->estadoModal = "Crear Nuevo Procedimiento";
-        $this->modal = true;
+        $this->NuevoProcedimiento();
+        $this->modalNuevo = true;
     }
 
     public function confirmarEliminar($id)
@@ -127,16 +141,27 @@ class procedimientosIndex extends Component
 
     public function eliminar($id)
     {
-        if (procedimientos::destroy($this->id)) {
-            $this->reset();
-            $this->dispatch('ProcedimientoEliminado', type: 'success', title: 'Eliminado', text: 'El procedimiento se ha eliminado correctamente');
+        if (!$id == $this->id) return;
+        try {
+            if (Procedimientos::destroy($this->id)) {
+                $this->reset();
+                $this->dispatch('ProcedimientoEliminado', type: 'success', title: 'Eliminado', text: 'El procedimiento se ha eliminado correctamente');
+            }
+        } catch (ValidationException $e) {
+            $this->dispatch('ProcedimientoError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
+        } catch (QueryException $e) {
+            Log::error('Error de consulta en la base de datos: ' . $e->getMessage());
+            $this->dispatch('ProcedimientoError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Error en el servidor: ' . $e->getMessage());
+            $this->dispatch('ProcedimientoError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
         }
     }
 
     private function actualizarDispositivos($id, $estado)
     {
         try {
-            $dispositivo = dispositivos::findOrFail($id);
+            $dispositivo = Dispositivos::findOrFail($id);
             $dispositivo->estado = $this->obtenerEstadoDispositivo($estado);
             $dispositivo->save();
             return true;
@@ -158,7 +183,7 @@ class procedimientosIndex extends Component
         }
 
         try {
-            $procedimiento = procedimientos::updateOrCreate(
+            $procedimiento = Procedimientos::updateOrCreate(
                 ['id' => $this->id],
                 [
                     'fecha_ini' => $this->fecha_ini,
@@ -173,8 +198,7 @@ class procedimientosIndex extends Component
                 ]
             );
 
-            // Actualizar estado del dispositivo según el procedimiento
-            if (in_array($this->estado_proc, ['ABIERTO', 'CERRADO'])) {
+            if (in_array($this->estado_proc, ['ABIERTO', 'CERRADO', 'CANCELADO'])) {
                 $estado = $this->estado_proc === 'ABIERTO' ? 'abrir' : 'cerrar';
                 if (!$this->actualizarDispositivos($this->dispositivo_id, $estado)) {
                     $this->dispatch('EspecialistaError', type: 'error', title: 'Error', text: 'Error al actualizar los dispositivos');
@@ -194,14 +218,14 @@ class procedimientosIndex extends Component
         }
     }
 
-
     public function editar($id)
     {
         $this->id = $id;
-        $this->modal = true;
+        $this->modalNuevo = true;
         $this->estadoModal = "Editar Datos del Procedimiento";
 
-        $datosProcediminto = procedimientos::find($id);
+        $this->NuevoProcedimiento();
+        $datosProcediminto = Procedimientos::find($id);
         $this->fecha_ini = $datosProcediminto['fecha_ini'];
         $this->fecha_fin = $datosProcediminto['fecha_fin'];
         $this->duracion = $datosProcediminto['duracion'];
@@ -211,6 +235,141 @@ class procedimientosIndex extends Component
         $this->dispositivo_id = $datosProcediminto['dispositivo_id'];
         $this->observaciones = $datosProcediminto['observaciones'];
         $this->estado_proc = $datosProcediminto['estado_proc'];
-        $this->NuevoProcedimiento();
+    }
+
+    public function registrosHolter($id)
+    {
+        $this->id = $id;
+        $this->modalRegistros = true;
+        $this->estadoModal = "Registrar Datos del Holter";
+
+        $this->dataProcedimiento = (new RegistrosHolterIndex())->getProcedimientoId($id);
+
+        if (!$this->dataProcedimiento) {
+            $this->dispatch('ProcedimientoError', type: 'error', title: 'Error', text: 'No se encontraron datos del procedimiento.');
+            return;
+        }
+    }
+
+    public function registrosHolterExcel($id)
+    {
+        $this->id = $id;
+        $this->modalRegistrosExcel = true;
+        $this->estadoModal = "Importar Datos del Holter";
+
+        $this->dataProcedimiento = (new RegistrosHolterIndex())->getProcedimientoId($id);
+
+        if (!$this->dataProcedimiento) {
+            $this->dispatch('ProcedimientoError', type: 'error', title: 'Error', text: 'No se encontraron datos del procedimiento.');
+            return;
+        }
+    }
+    public function crearRegistrosHolterExcel()
+    {
+        Log::info('Iniciando lectura del archivo...');
+        if (!$this->csv_file) {
+            Log::error('No se ha subido ningún archivo.');
+            $this->dispatch('ProcedimientoError', type: 'error', title: 'Error', text: 'No se ha subido ningún archivo.');
+        }
+        $filePath = $this->csv_file->getRealPath();
+        if ($filePath) {
+            try {
+                $spreadsheet = IOFactory::load($filePath);
+                $worksheet = $spreadsheet->getActiveSheet();
+
+                foreach ($worksheet->getRowIterator() as $row) {
+                    $cellIterator = $row->getCellIterator();
+                    $cellIterator->setIterateOnlyExistingCells(FALSE);
+
+                    $columna1 = $cellIterator->current()->getValue();
+                    $cellIterator->next();
+                    $columna2 = $cellIterator->current()->getValue();
+                    $cellIterator->next();
+                    $columna3 = $cellIterator->current()->getValue();
+                    $cellIterator->next();
+                    $columna4 = $cellIterator->current()->getValue();
+                    $cellIterator->next();
+                    $columna5 = $cellIterator->current()->getValue();
+                    $cellIterator->next();
+                    $columna6 = $cellIterator->current()->getValue();
+                    $cellIterator->next();
+                    $columna7 = $cellIterator->current()->getValue();
+                    $cellIterator->next();
+                    $columna8 = $cellIterator->current()->getValue();
+                    $cellIterator->next();
+                    $columna9 = $cellIterator->current()->getValue();
+                    $cellIterator->next();
+                    $columna10 = $cellIterator->current()->getValue();
+                    //Log::info('IdProc: ' . $this->id . '-' . $columna2 . ',' . $columna3 . ',' . $columna4 . ',' . $columna5 . ',' . $columna6 . ',' . $columna7 . ',' . $columna8 . ',' . $columna9 . ',' . $columna10);
+
+                    // Guardar en la base de datos
+                    Registros::create([
+                        'procedimiento_id' => $this->id,
+                        'hora' => $columna2,
+                        'fc_min' => $columna3,
+                        'hora_fc_min' => $columna4,
+                        'fc_max' => $columna5,
+                        'hora_fc_max' => $columna6,
+                        'fc_medio' => $columna7,
+                        'total_latidos' => $columna8,
+                        'vent_total' => $columna9,
+                        'supr_total' => $columna10,
+                    ]);
+                }
+                // Eliminar el archivo temporal
+                unlink($filePath);
+            } catch (\Exception $e) {
+                Log::error('Error al leer el archivo: ' . $e->getMessage());
+                //$this->dispatch('ProcedimientoError', type: 'error', title: 'Error', text: 'Ocurrió un error al leer el archivo.');
+            }
+            $this->cerrarCaso = true;
+            $this->dispatch('ProcedimientoCreado', type: 'success', title: 'Registro exitoso', text: 'Archivo importado correctamente.');
+        }
+    }
+    public function crearRegistrosHolter()
+    {
+        $validatedData = $this->validate([
+            'hora' => 'required|date_format:H:i',
+            'fc_min' => 'required|numeric|min:30|max:200',
+            'hora_fc_min' => 'required|date_format:H:i',
+            'fc_max' => 'required|numeric|min:30|max:200',
+            'hora_fc_max' => 'required|date_format:H:i',
+            'fc_medio' => 'required|numeric|min:30|max:200',
+            'total_latidos' => 'required|numeric|min:1000',
+            'vent_total' => 'required|numeric|min:0',
+            'supr_total' => 'required|numeric|min:0',
+        ]);
+
+        try {
+            Registros::create([
+                'procedimiento_id' => $this->id,
+                'hora' => $this->hora,
+                'fc_min' => $this->fc_min,
+                'hora_fc_min' => $this->hora_fc_min,
+                'fc_max' => $this->fc_max,
+                'hora_fc_max' => $this->hora_fc_max,
+                'fc_medio' => $this->fc_medio,
+                'total_latidos' => $this->total_latidos,
+                'vent_total' => $this->vent_total,
+                'supr_total' => $this->supr_total,
+            ]);
+            $this->reset(['hora', 'fc_min', 'hora_fc_min', 'fc_max', 'hora_fc_max', 'fc_medio', 'total_latidos', 'vent_total', 'supr_total']);
+            $this->dispatch('ProcedimientoCreado', type: 'success', title: 'Registro exitoso', text: 'Registro de Holter creado exitosamente.');
+        } catch (\Exception $e) {
+            $this->dispatch('ProcedimientoError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
+        }
+    }
+
+    public function cerrarProcedimiento($id)
+    {
+        try {
+            $proc = Procedimientos::findOrFail($id);
+            $proc->estado_proc = "CERRADO";
+            $proc->save();
+            $this->dispatch('ProcedimientoCreado', type: 'success', title: 'Registro exitoso', text: 'Procedimiento Cerrado Exitosamente.');
+        } catch (\Exception $e) {
+            Log::error("Error al actualizar el procedimiento ID {$id}: " . $e->getMessage());
+            $this->dispatch('ProcedimientoError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
+        }
     }
 }

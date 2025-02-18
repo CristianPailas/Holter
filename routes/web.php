@@ -6,6 +6,7 @@ use App\Livewire\equiposIndex;
 use App\Livewire\especialistaIndex;
 use App\Livewire\pacientesIndex;
 use App\Livewire\procedimientosIndex;
+use App\Livewire\RegistrosHolterIndex;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -20,5 +21,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     Route::middleware(['auth:sanctum', 'role:user'])->group(function () {
         route::get('procedimientos', procedimientosIndex::class)->name('procedimientos');
+        Route::get('registros/{id}', RegistrosHolterIndex::class)
+            ->where('id', '[0-9]+')
+            ->name('registros');
     });
 });
