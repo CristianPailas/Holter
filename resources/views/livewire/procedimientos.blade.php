@@ -563,7 +563,6 @@
                                                         wire:model="csv_file"
                                                         class="form-control @error('csv_file') is-invalid @enderror"
                                                         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                                        name="csv_file"
                                                         data-max-file-size="2M"
                                                         required>
                                                     @error('csv_file')

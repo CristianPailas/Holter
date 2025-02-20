@@ -144,7 +144,6 @@ class ProcedimientosIndex extends Component
         if (!$id == $this->id) return;
         try {
             if (Procedimientos::destroy($this->id)) {
-                $this->reset();
                 $this->dispatch('ProcedimientoEliminado', type: 'success', title: 'Eliminado', text: 'El procedimiento se ha eliminado correctamente');
             }
         } catch (ValidationException $e) {
@@ -270,61 +269,62 @@ class ProcedimientosIndex extends Component
         if (!$this->csv_file) {
             Log::error('No se ha subido ningún archivo.');
             $this->dispatch('ProcedimientoError', type: 'error', title: 'Error', text: 'No se ha subido ningún archivo.');
+            return;
         }
-        $filePath = $this->csv_file->getRealPath();
-        if ($filePath) {
-            try {
-                $spreadsheet = IOFactory::load($filePath);
-                $worksheet = $spreadsheet->getActiveSheet();
 
-                foreach ($worksheet->getRowIterator() as $row) {
-                    $cellIterator = $row->getCellIterator();
-                    $cellIterator->setIterateOnlyExistingCells(FALSE);
 
-                    $columna1 = $cellIterator->current()->getValue();
-                    $cellIterator->next();
-                    $columna2 = $cellIterator->current()->getValue();
-                    $cellIterator->next();
-                    $columna3 = $cellIterator->current()->getValue();
-                    $cellIterator->next();
-                    $columna4 = $cellIterator->current()->getValue();
-                    $cellIterator->next();
-                    $columna5 = $cellIterator->current()->getValue();
-                    $cellIterator->next();
-                    $columna6 = $cellIterator->current()->getValue();
-                    $cellIterator->next();
-                    $columna7 = $cellIterator->current()->getValue();
-                    $cellIterator->next();
-                    $columna8 = $cellIterator->current()->getValue();
-                    $cellIterator->next();
-                    $columna9 = $cellIterator->current()->getValue();
-                    $cellIterator->next();
-                    $columna10 = $cellIterator->current()->getValue();
-                    //Log::info('IdProc: ' . $this->id . '-' . $columna2 . ',' . $columna3 . ',' . $columna4 . ',' . $columna5 . ',' . $columna6 . ',' . $columna7 . ',' . $columna8 . ',' . $columna9 . ',' . $columna10);
+        try {
+            $filePath = $this->csv_file->getRealPath();
+            $spreadsheet = IOFactory::load($filePath);
+            $worksheet = $spreadsheet->getActiveSheet();
 
-                    // Guardar en la base de datos
-                    Registros::create([
-                        'procedimiento_id' => $this->id,
-                        'hora' => $columna2,
-                        'fc_min' => $columna3,
-                        'hora_fc_min' => $columna4,
-                        'fc_max' => $columna5,
-                        'hora_fc_max' => $columna6,
-                        'fc_medio' => $columna7,
-                        'total_latidos' => $columna8,
-                        'vent_total' => $columna9,
-                        'supr_total' => $columna10,
-                    ]);
-                }
-                // Eliminar el archivo temporal
-                unlink($filePath);
-            } catch (\Exception $e) {
-                Log::error('Error al leer el archivo: ' . $e->getMessage());
-                //$this->dispatch('ProcedimientoError', type: 'error', title: 'Error', text: 'Ocurrió un error al leer el archivo.');
+            foreach ($worksheet->getRowIterator() as $row) {
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(FALSE);
+
+                $columna1 = $cellIterator->current()->getValue();
+                $cellIterator->next();
+                $columna2 = $cellIterator->current()->getValue();
+                $cellIterator->next();
+                $columna3 = $cellIterator->current()->getValue();
+                $cellIterator->next();
+                $columna4 = $cellIterator->current()->getValue();
+                $cellIterator->next();
+                $columna5 = $cellIterator->current()->getValue();
+                $cellIterator->next();
+                $columna6 = $cellIterator->current()->getValue();
+                $cellIterator->next();
+                $columna7 = $cellIterator->current()->getValue();
+                $cellIterator->next();
+                $columna8 = $cellIterator->current()->getValue();
+                $cellIterator->next();
+                $columna9 = $cellIterator->current()->getValue();
+                $cellIterator->next();
+                $columna10 = $cellIterator->current()->getValue();
+
+                // Guardar en la base de datos
+                Registros::create([
+                    'procedimiento_id' => $this->id,
+                    'hora' => $columna2,
+                    'fc_min' => $columna3,
+                    'hora_fc_min' => $columna4,
+                    'fc_max' => $columna5,
+                    'hora_fc_max' => $columna6,
+                    'fc_medio' => $columna7,
+                    'total_latidos' => $columna8,
+                    'vent_total' => $columna9,
+                    'supr_total' => $columna10,
+                ]);
             }
-            $this->cerrarCaso = true;
-            $this->dispatch('ProcedimientoCreado', type: 'success', title: 'Registro exitoso', text: 'Archivo importado correctamente.');
+            // Eliminar el archivo temporal
+            unlink($filePath);
+        } catch (Exception $e) {
+            Log::error('Error al leer el archivo: ' . $e->getMessage());
+            $this->dispatch('ProcedimientoError', type: 'error', title: 'Error', text: 'Ocurrió un error al leer el archivo.');
         }
+        $this->cerrarCaso = true;
+        Log::info('Archivo importado correctamente...');
+        $this->dispatch('ProcedimientoCreado', type: 'success', title: 'Registro exitoso', text: 'Archivo importado correctamente.');
     }
     public function crearRegistrosHolter()
     {
@@ -370,7 +370,8 @@ class ProcedimientosIndex extends Component
             $proc->save();
             $this->actualizarDispositivos($idDisp, 'Operativo');
             $this->dispatch('ProcedimientoCreado', type: 'success', title: 'Registro exitoso', text: 'Procedimiento Cerrado Exitosamente.');
-        } catch (\Exception $e) {
+            $this->modalRegistrosExcel = false;
+        } catch (Exception $e) {
             Log::error("Error al actualizar el procedimiento ID {$id}: " . $e->getMessage());
             $this->dispatch('ProcedimientoError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
         }

@@ -116,7 +116,7 @@ class EspecialistaIndex extends Component
                         [
                             'name' => strtoupper($this->nombres) . " " . strtoupper($this->apellidos),
                             'password' => Hash::make($this->contrasena),
-                            'role' => 'admin'
+                            'role' => 'user'
                         ]
                     );
                 }
