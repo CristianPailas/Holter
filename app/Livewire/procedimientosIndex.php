@@ -363,9 +363,12 @@ class ProcedimientosIndex extends Component
     public function cerrarProcedimiento($id)
     {
         try {
+
             $proc = Procedimientos::findOrFail($id);
+            $idDisp = $proc->dispositivo_id;
             $proc->estado_proc = "CERRADO";
             $proc->save();
+            $this->actualizarDispositivos($idDisp, 'Operativo');
             $this->dispatch('ProcedimientoCreado', type: 'success', title: 'Registro exitoso', text: 'Procedimiento Cerrado Exitosamente.');
         } catch (\Exception $e) {
             Log::error("Error al actualizar el procedimiento ID {$id}: " . $e->getMessage());
