@@ -1,28 +1,42 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Livewire\dashboardIndex;
-use App\Livewire\equiposIndex;
-use App\Livewire\especialistaIndex;
-use App\Livewire\pacientesIndex;
-use App\Livewire\procedimientosIndex;
+use App\Livewire\DashboardIndex;
+use App\Livewire\EquiposIndex;
+use App\Livewire\EspecialistaIndex;
+use App\Livewire\PacientesIndex;
+use App\Livewire\ProcedimientosIndex;
 use App\Livewire\RegistrosHolterIndex;
+use App\Livewire\ReporteHolterIndex;
+use Illuminate\Support\Facades\Auth;
 
+// Redirección inicial al login
 Route::get('/', function () {
-    return redirect()->route('login');
+    $ruta = (Auth::check()) ? 'dashboard' : 'login';
+    return redirect()->route($ruta);
 });
 
+// Middleware de autenticación
 Route::middleware(['auth:sanctum'])->group(function () {
-    route::get('dashboard', dashboardIndex::class)->name('dashboard');
+    Route::get('dashboard', DashboardIndex::class)->name('dashboard');
+
+    // Rutas para ADMIN
     Route::middleware(['role:admin'])->group(function () {
-        route::get('pacientes', pacientesIndex::class)->name('pacientes');
-        route::get('especialistas', especialistaIndex::class)->name('especialistas');
-        route::get('dispositivos', equiposIndex::class)->name('dispositivos');
+        Route::get('pacientes', PacientesIndex::class)->name('pacientes');
+        Route::get('especialistas', EspecialistaIndex::class)->name('especialistas');
+        Route::get('dispositivos', EquiposIndex::class)->name('dispositivos');
     });
-    Route::middleware(['auth:sanctum', 'role:user'])->group(function () {
-        route::get('procedimientos', procedimientosIndex::class)->name('procedimientos');
+
+    // Rutas para USER
+    Route::middleware(['role:user'])->group(function () {
+        Route::get('procedimientos', ProcedimientosIndex::class)->name('procedimientos');
         Route::get('registros/{id}', RegistrosHolterIndex::class)
             ->where('id', '[0-9]+')
             ->name('registros');
+    });
+
+    // Rutas para CLIENTE
+    Route::middleware(['role:cliente'])->group(function () {
+        Route::get('reportes', ReporteHolterIndex::class)->name('reportes');
     });
 });

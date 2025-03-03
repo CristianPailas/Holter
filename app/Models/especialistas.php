@@ -22,4 +22,9 @@ class Especialistas extends Model
         'contacto',
         'estado_esp'
     ];
+
+    public function procedimientos()
+    {
+        return $this->hasMany(Procedimientos::class, 'especialista_id');
+    }
 }

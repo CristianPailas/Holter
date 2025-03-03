@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('direccion')->nullable();
             $table->biginteger('celular')->nullable();
             $table->enum('estado_pcte', ['ACTIVO', 'INACTIVO'])->default('ACTIVO');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

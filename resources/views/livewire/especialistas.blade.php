@@ -169,7 +169,12 @@
                                 <div class="input-group">
                                     <span class="input-group-text text-body"><i class="fas fa-search"
                                             aria-hidden="true"></i></span>
-                                    <input type="text" class="form-control" placeholder="Buscar especialista...">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Buscar especialista..."
+                                        wire:model="search"
+                                        wire:keydown.enter="buscarEspecialista">
                                 </div>
                             </li>
                             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -182,36 +187,8 @@
                                 </a>
                             </li>
                             {{-- NOTIFICACIONES  --}}
-                            <li class="nav-item mx-3 dropdown pe-2 d-flex align-items-center">
-                                <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa fa-bell cursor-pointer"></i>
-                                </a>
-                                <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4"
-                                    aria-labelledby="dropdownMenuButton">
-                                    <li class="mb-2">
-                                        <a class="dropdown-item border-radius-md" href="javascript:;">
-                                            <div class="d-flex py-1">
-                                                <div class="my-auto">
-                                                    <img src="../assets/img/team-2.jpg"
-                                                        class="avatar avatar-sm  me-3 ">
-                                                </div>
-                                                <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="text-sm font-weight-normal mb-1">
-                                                        <span class="font-weight-bold">New message</span> from Laur
-                                                    </h6>
-                                                    <p class="text-xs text-secondary mb-0 ">
-                                                        <i class="fa fa-clock me-1"></i>
-                                                        13 minutes ago
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    {{-- FIN NOTIFICACIONES  --}}
-
-                                </ul>
-                            </li>
+                            <livewire:nav-logout />
+                            {{-- FIN NOTIFICACIONES  --}}
                         </ul>
                     </div>
                 </div>
@@ -235,6 +212,7 @@
                             </div>
                             <div class="card-body px-0 pt-0 pb-2">
                                 <div class="table-responsive p-0">
+                                    @if(count($listadoEspecialistas) > 0)
                                     <table class="table align-items-center mb-0">
                                         <thead>
                                             <th
@@ -318,42 +296,45 @@
                                                 </td>
                                             </tr>
                                             @endforeach
-
-                                            @if ($modalDelete)
-                                            <div class="modal fade show" id="exampleModalLive" tabindex="-1"
-                                                aria-labelledby="exampleModalLiveLabel" style="display: block;"
-                                                aria-modal="true" role="dialog">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLiveLabel">Eliminar
-                                                                especialista:
-                                                                <b class="text-danger">{{ $EspecialistaEliminar->nombres }} {{ $EspecialistaEliminar->apellidos }}</b>
-                                                            </h5>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <p>¿Está seguro de eliminar este especialista? Esta operación
-                                                                <b>NO</b>
-                                                                se puede deshacer!
-                                                            </p>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                wire:click="cerrar" data-bs-dismiss="modal">Cerrar</button>
-                                                            <button type="button"
-                                                                wire:click="eliminar({{ $EspecialistaEliminar->id }})"
-                                                                class="btn btn-danger">Eliminar</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-backdrop fade show"></div>
-                                            @endif
-
                                         </tbody>
                                     </table>
+                                    @else
+                                    <p>No se encontraron resultados.</p>
+                                    @endif
                                 </div>
                             </div>
+
+                            @if ($modalDelete)
+                            <div class="modal fade show" id="exampleModalLive" tabindex="-1"
+                                aria-labelledby="exampleModalLiveLabel" style="display: block;"
+                                aria-modal="true" role="dialog">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLiveLabel">Eliminar
+                                                especialista:
+                                                <b class="text-danger">{{ $EspecialistaEliminar->nombres }} {{ $EspecialistaEliminar->apellidos }}</b>
+                                            </h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>¿Está seguro de eliminar este especialista? Esta operación
+                                                <b>NO</b>
+                                                se puede deshacer!
+                                            </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                wire:click="cerrar" data-bs-dismiss="modal">Cerrar</button>
+                                            <button type="button"
+                                                wire:click="eliminar({{ $EspecialistaEliminar->id }})"
+                                                class="btn btn-danger">Eliminar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-backdrop fade show"></div>
+                            @endif
+
                         </div>
                     </div>
                 </div>

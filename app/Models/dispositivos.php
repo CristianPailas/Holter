@@ -16,4 +16,9 @@ class Dispositivos extends Model
         'numero_serie',
         'estado',
     ];
+
+    public function procedimientos()
+    {
+        return $this->hasMany(Procedimientos::class, 'dispositivo_id');
+    }
 }

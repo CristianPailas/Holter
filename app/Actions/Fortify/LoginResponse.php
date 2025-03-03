@@ -15,7 +15,9 @@ class LoginResponse implements LoginResponseContract
         if ($request->user()->role === 'user') {
             return redirect()->route('dashboard');
         }
-
+        if ($request->user()->role === 'cliente') {
+            return redirect()->route('dashboard');
+        }
         return redirect()->route('login');
     }
 }

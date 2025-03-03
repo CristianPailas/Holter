@@ -4,20 +4,28 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next, $role): Response
     {
-        if(auth()->check() && auth()->user()->role == $role) {
-            return $next($request);
+        if (!Auth::check()) {
+            Log::info("Usuario no autenticado. Redirigiendo a login.");
+            return redirect()->route('login');
         }
-        return redirect('login')->with('message', 'No tiene permisos para acceder a esta sección');
+        $userRole = Auth::user()->role;
+        /*
+        Log::info("Usuario autenticado con rol: " . $userRole);
+        Log::info("Rol en ruta: " . $role); */
+
+        if (auth()->user()->role != $role) {
+            Log::warning("Acceso denegado al usuario con rol: " . $userRole);
+            abort(403, 'No tiene permisos para acceder a esta sección');
+        }
+
+        return $next($request);
     }
 }

@@ -19,6 +19,17 @@ class Pacientes extends Model
         'fecha_nacimiento',
         'direccion',
         'celular',
-        'estado_pcte'
+        'estado_pcte',
+        'user_id'
     ];
+
+    public function procedimientos()
+    {
+        return $this->hasMany(Procedimientos::class, 'paciente_id');
+    }
+
+    public function usuarios()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

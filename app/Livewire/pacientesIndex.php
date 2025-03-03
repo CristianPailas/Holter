@@ -9,6 +9,9 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Exception;
 use App\Models\Pacientes;
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class PacientesIndex extends Component
 {
@@ -31,29 +34,47 @@ class PacientesIndex extends Component
     public $estado_pcte;
 
 
-    public $listadoPacientes;
+    public $listadoPacientes = [];
     public $modal = false;
     public $estadoModal;
     public $datosPaciente;
     public $id;
     public $modalDelete = false;
     public $pacienteEliminar;
+    public $search;
+    public $modalUpdate = false;
 
-    public function listarPacientes()
+    public function mount()
     {
-        return pacientes::All();
+        $this->cargarPacientes();
+    }
+    public function cargarPacientes()
+    {
+        $this->listadoPacientes = Pacientes::all();
     }
 
     public function render()
     {
-        $this->listadoPacientes = $this->listarPacientes();
         return view('livewire.pacientes', ['listadoPacientes', $this->listadoPacientes]);
     }
 
+    public function buscarPaciente()
+    {
+        //Log::info('Valor de search:', ['search' => $this->search]);
+        if ($this->search) {
+            $this->listadoPacientes = Pacientes::where('nombres', 'like', '%' . $this->search . '%')
+                ->orWhere('apellidos', 'like', '%' . $this->search . '%')
+                ->orWhere('identificacion', 'like', '%' . $this->search . '%')
+                ->get();
+        } else {
+            $this->cargarPacientes();
+        }
+    }
     public function editar($id)
     {
         $this->id = $id;
         $this->modal = true;
+        $this->modalUpdate = true;
         $this->estadoModal = "Editar Datos del Paciente";
         $datosPaciente = pacientes::find($id);
         $this->nombres = strtoupper($datosPaciente['nombres']);
@@ -69,12 +90,20 @@ class PacientesIndex extends Component
     public function cerrar()
     {
         $this->modal = false;
+        $this->modalUpdate = false;
         $this->modalDelete = false;
     }
     public function creacion()
     {
         $this->estadoModal = "Crear Nuevo Paciente";
+        $this->modalUpdate = false;
         $this->modal = true;
+    }
+
+    public function calcularEdad($id)
+    {
+        $fechaNacimiento = Carbon::parse($id);
+        return $fechaNacimiento->age;
     }
 
 
@@ -82,6 +111,19 @@ class PacientesIndex extends Component
     {
         if ($this->validate()) {
             try {
+
+                if (!$this->modalUpdate) {
+                    $newUser = User::firstOrCreate(
+                        ['email' => $this->identificacion . '@holtersapp.com'],
+                        [
+                            'name' => strtoupper($this->nombres) . " " . strtoupper($this->apellidos),
+                            'password' => Hash::make($this->identificacion),
+                            'role' => 'cliente'
+                        ]
+                    );
+                    $idUser = $newUser->id;
+                }
+
                 $paciente = new pacientes;
                 $datosPaciente['id'] = $this->id;
                 $datosPaciente['nombres'] = strtoupper($this->nombres);
@@ -92,6 +134,9 @@ class PacientesIndex extends Component
                 $datosPaciente['direccion'] = $this->direccion;
                 $datosPaciente['fecha_nacimiento'] = $this->fecha_nacimiento;
                 $datosPaciente['estado_pcte'] = $this->estado_pcte;
+                if (!$this->modalUpdate) {
+                    $datosPaciente['user_id'] = $idUser;
+                }
                 if ($paciente::updateOrCreate(
                     [
                         'id' => $datosPaciente['id']
@@ -99,6 +144,7 @@ class PacientesIndex extends Component
                     $datosPaciente
                 )) {
                     $this->reset();
+                    $this->cargarPacientes();
                     $this->dispatch('PacienteCreado', type: 'success', title: 'Registro exitoso', text: 'El paciente se ha guardado correctamente');
                 }
             } catch (ValidationException $e) {
@@ -117,7 +163,6 @@ class PacientesIndex extends Component
     {
         $this->modalDelete = true;
         $this->pacienteEliminar = pacientes::find($id);
-        # dd($this->pacienteEliminar);
         $this->id = $id;
     }
 

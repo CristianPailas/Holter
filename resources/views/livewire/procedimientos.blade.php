@@ -172,7 +172,12 @@
                                 <li class="nav-item d-flex align-items-center">
                                     <div class="input-group">
                                         <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                                        <input type="text" class="form-control" placeholder="Buscar proceso...">
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            placeholder="Buscar procedimiento..."
+                                            wire:model="search"
+                                            wire:keydown.enter="buscarProcedimiento">
                                     </div>
                                 </li>
                                 <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -185,33 +190,8 @@
                                     </a>
                                 </li>
                                 {{-- NOTIFICACIONES  --}}
-                                <li class="nav-item mx-3 dropdown pe-2 d-flex align-items-center">
-                                    <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa fa-bell cursor-pointer"></i>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
-                                        <li class="mb-2">
-                                            <a class="dropdown-item border-radius-md" href="javascript:;">
-                                                <div class="d-flex py-1">
-                                                    <div class="my-auto">
-                                                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3 ">
-                                                    </div>
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="text-sm font-weight-normal mb-1">
-                                                            <span class="font-weight-bold">New message</span> from Laur
-                                                        </h6>
-                                                        <p class="text-xs text-secondary mb-0 ">
-                                                            <i class="fa fa-clock me-1"></i>
-                                                            13 minutes ago
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        {{-- FIN NOTIFICACIONES  --}}
-
-                                    </ul>
-                                </li>
+                                <livewire:nav-logout />
+                                {{-- FIN NOTIFICACIONES  --}}
                             </ul>
                         </div>
                     </div>
@@ -234,6 +214,7 @@
                                 </div>
                                 <div class="card-body px-0 pt-0 pb-2">
                                     <div class="table-responsive p-0">
+                                        @if(count($listadoProcedimientos) > 0)
                                         <table class="table align-items-center mb-0">
                                             <thead>
                                                 <tr>
@@ -264,13 +245,16 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                <?php
+                                                //print_r($listadoProcedimientos);
+                                                ?>
                                                 @foreach ($listadoProcedimientos as $procedimiento)
                                                 <tr>
                                                     <td class="text-center">
                                                         <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->id }}</p>
                                                     </td>
                                                     <td class="text-center">
-                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->identificacion }} - {{ $procedimiento->nombres }} {{ $procedimiento->apellidos }} </p>
+                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->paciente->identificacion }} - {{ $procedimiento->paciente->nombres }} {{ $procedimiento->paciente->apellidos }} </p>
                                                     </td>
                                                     <td class="text-center">
                                                         <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->edad }}</p>
@@ -282,7 +266,7 @@
                                                         <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->fecha_fin }}</p>
                                                     </td>
                                                     <td class="text-center">
-                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->numero_serie }}</p>
+                                                        <p class="text-xs font-weight-bold mb-0">{{ $procedimiento->dispositivo->numero_serie }}</p>
                                                     </td>
                                                     <td class="text-center">
                                                         <span class="badge
@@ -323,6 +307,9 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
+                                        @else
+                                        <p>No se encontraron resultados.</p>
+                                        @endif
                                         {{-- Modal para confirmar eliminación --}}
                                         {{-- @if ($modalDelete)
                                             <div class="modal fade show" id="exampleModalLive" tabindex="-1"

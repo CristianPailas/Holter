@@ -22,4 +22,17 @@ class Procedimientos extends Model
         'estado_proc',
         'observaciones',
     ];
+
+    public function paciente()
+    {
+        return $this->belongsTo(Pacientes::class, 'paciente_id');
+    }
+    public function dispositivo()
+    {
+        return $this->belongsTo(Dispositivos::class, 'dispositivo_id');
+    }
+    public function especialista()
+    {
+        return $this->belongsTo(Especialistas::class, 'especialista_id');
+    }
 }

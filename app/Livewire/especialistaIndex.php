@@ -23,6 +23,7 @@ class EspecialistaIndex extends Component
     public $EspecialistaEliminar;
     public $id;
     public $updateModal = false;
+    public $search;
 
     #[Validate('required', as: 'nombre', message: 'El :attribute es obligatorio')]
     public $nombres;
@@ -50,15 +51,31 @@ class EspecialistaIndex extends Component
 
 
 
-    public function listarEspecialistas()
+    public function mount()
     {
-        return especialistas::all();
+        $this->cargarEspecialistas();
+    }
+    public function cargarEspecialistas()
+    {
+        $this->listadoEspecialistas = Especialistas::all();
     }
 
     public function render()
     {
-        $this->listadoEspecialistas = $this->listarEspecialistas();
         return view('livewire.especialistas', ['listadoEspecialistas' => $this->listadoEspecialistas]);
+    }
+
+    public function buscarEspecialista()
+    {
+        Log::info('Valor de search:', ['search' => $this->search]);
+        if ($this->search) {
+            $this->listadoEspecialistas = Especialistas::where('nombres', 'like', '%' . $this->search . '%')
+                ->orWhere('apellidos', 'like', '%' . $this->search . '%')
+                ->orWhere('identification', 'like', '%' . $this->search . '%')
+                ->get();
+        } else {
+            $this->cargarEspecialistas();
+        }
     }
 
     public function editar($id)
@@ -122,6 +139,7 @@ class EspecialistaIndex extends Component
                 }
 
                 $this->reset();
+                $this->cargarEspecialistas();
                 $this->dispatch('EspecialistaCrear', type: 'success', title: 'Registro exitoso', text: 'El especialista se ha guardado correctamente');
             } catch (ValidationException $e) {
                 $this->dispatch('EspecialistaError', type: 'error', title: 'Error', text: $e->getMessage());
@@ -139,7 +157,6 @@ class EspecialistaIndex extends Component
     {
         $this->modalDelete = true;
         $this->EspecialistaEliminar = especialistas::find($id);
-        # dd($this->dispositivoEliminar);
         $this->id = $id;
     }
 

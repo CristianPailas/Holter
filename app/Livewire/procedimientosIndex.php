@@ -28,6 +28,7 @@ class ProcedimientosIndex extends Component
     public $datosPaciente;
     public $datosEspecialista;
     public $datosDispositivo;
+    public $search;
 
     #[Validate('required', as: 'fecha_ini',  message: 'La :attribute es obligatorio')]
     public $fecha_ini;
@@ -63,20 +64,46 @@ class ProcedimientosIndex extends Component
     public $fc_medio, $total_latidos, $vent_total, $supr_total;
     public $cerrarCaso = false;
 
+
+    public function mount()
+    {
+        $this->listarProcedimientos();
+    }
     public function listarProcedimientos()
     {
-        $proc = Procedimientos::join('pacientes', 'procedimientos.paciente_id', '=', 'pacientes.id')
-            ->join('dispositivos', 'procedimientos.dispositivo_id', '=', 'dispositivos.id')
-            ->select('procedimientos.*', 'pacientes.identificacion', 'pacientes.nombres', 'pacientes.apellidos', 'dispositivos.numero_serie')
-            ->orderBy('procedimientos.id')
+        $this->listadoProcedimientos = Procedimientos::with(['paciente', 'dispositivo'])
+            ->orderBy('id')
             ->get();
-        return $proc;
     }
     public function render()
     {
-        $this->listadoProcedimientos = $this->listarProcedimientos();
         return view('livewire.procedimientos', ['listadoProcedimientos', $this->listadoProcedimientos]);
     }
+
+    public function buscarProcedimiento()
+    {
+        Log::info('Valor de search:', ['search' => $this->search]);
+        if (!$this->search) {
+            $this->listarProcedimientos();
+            return;
+        }
+
+        $this->listadoProcedimientos = Procedimientos::with(['paciente', 'dispositivo'])
+            ->where(function ($query) {
+                $query->where('fecha_ini', 'like', '%' . $this->search . '%')
+                    ->orWhereHas('paciente', function ($q) {
+                        $q->where('nombres', 'like', '%' . $this->search . '%')
+                            ->orWhere('apellidos', 'like', '%' . $this->search . '%')
+                            ->orWhere('identificacion', 'like', '%' . $this->search . '%');
+                    })
+                    ->orWhereHas('dispositivo', function ($q) {
+                        $q->where('numero_serie', 'like', '%' . $this->search . '%');
+                    });
+            })
+            ->orderBy('id')
+            ->get();
+    }
+
 
     public function NuevoProcedimiento()
     {
@@ -205,6 +232,7 @@ class ProcedimientosIndex extends Component
             }
 
             $this->reset();
+            $this->listarProcedimientos();
             $this->dispatch('ProcedimientoCreado', type: 'success', title: 'Registro exitoso', text: 'El procedimiento se ha guardado correctamente');
         } catch (ValidationException $e) {
             $this->dispatch('ProcedimientoError', type: 'error', title: 'Error', text: $e->getMessage());
@@ -324,6 +352,7 @@ class ProcedimientosIndex extends Component
         }
         $this->cerrarCaso = true;
         Log::info('Archivo importado correctamente...');
+        $this->listarProcedimientos();
         $this->dispatch('ProcedimientoCreado', type: 'success', title: 'Registro exitoso', text: 'Archivo importado correctamente.');
     }
     public function crearRegistrosHolter()
@@ -354,6 +383,7 @@ class ProcedimientosIndex extends Component
                 'supr_total' => $this->supr_total,
             ]);
             $this->reset(['hora', 'fc_min', 'hora_fc_min', 'fc_max', 'hora_fc_max', 'fc_medio', 'total_latidos', 'vent_total', 'supr_total']);
+            $this->listarProcedimientos();
             $this->dispatch('ProcedimientoCreado', type: 'success', title: 'Registro exitoso', text: 'Registro de Holter creado exitosamente.');
         } catch (\Exception $e) {
             $this->dispatch('ProcedimientoError', type: 'error', title: 'Ha ocurrido un error', text: $e->getMessage());
@@ -369,6 +399,7 @@ class ProcedimientosIndex extends Component
             $proc->estado_proc = "CERRADO";
             $proc->save();
             $this->actualizarDispositivos($idDisp, 'Operativo');
+            $this->listarProcedimientos();
             $this->dispatch('ProcedimientoCreado', type: 'success', title: 'Registro exitoso', text: 'Procedimiento Cerrado Exitosamente.');
             $this->modalRegistrosExcel = false;
         } catch (Exception $e) {

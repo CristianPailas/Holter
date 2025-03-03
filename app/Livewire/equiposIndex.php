@@ -13,7 +13,6 @@ use App\Models\Dispositivos;
 class EquiposIndex extends Component
 {
     public $listadoDispositivos = [];
-
     public $dispositivoSeleccionado = false;
     public $modal = false;
     public $estadoModal;
@@ -21,6 +20,7 @@ class EquiposIndex extends Component
     public $id;
     public $modalDelete = false;
     public $dispositivoEliminar;
+    public $search;
 
     #[Validate('required', as: 'numero de serie',  message: 'El :attribute es obligatorio')]
     public $numero_serie;
@@ -31,26 +31,32 @@ class EquiposIndex extends Component
     #[Validate('required', as: 'estado',  message: 'El :attribute es obligatorio')]
     public $estado;
 
-
-
-
-
-
-    public function listarDispositivos()
+    public function mount()
     {
-        return dispositivos::All();
+        $this->cargarDispositivos();
+    }
+    public function cargarDispositivos()
+    {
+        $this->listadoDispositivos = Dispositivos::all();
     }
 
     public function render()
     {
-        $this->listadoDispositivos = $this->listarDispositivos();
         return view('livewire.dispositivos', ['listadoDispositivos', $this->listadoDispositivos]);
     }
 
-    /*  public function render()
+    public function buscarDispositivo()
     {
-        return view('livewire.dispositivos', ['listadoDispositivos', $this->listadoDispositivos, 'datosdispositivos', $this->datosdispositivos]);
-    } */
+        Log::info('Valor de search:', ['search' => $this->search]);
+        if ($this->search) {
+            $this->listadoDispositivos = Dispositivos::where('numero_serie', 'like', '%' . $this->search . '%')
+                ->orWhere('modelo', 'like', '%' . $this->search . '%')
+                ->orWhere('fabricante', 'like', '%' . $this->search . '%')
+                ->get();
+        } else {
+            $this->cargarDispositivos();
+        }
+    }
     public function editar($id)
     {
         $this->id = $id;
@@ -92,6 +98,7 @@ class EquiposIndex extends Component
             $datosdispositivo
         )) {
             $this->reset();
+            $this->cargarDispositivos();
             $this->dispatch('DispositivoCreado', type: 'success', title: 'Registro exitoso', text: 'El dispositivo se ha guardado correctamente');
         }
     }

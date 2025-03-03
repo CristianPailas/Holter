@@ -48,8 +48,13 @@ class User extends Authenticatable
         return $this->role === 'user';
     }
 
+    public function isCliente()
+    {
+        return $this->role === 'cliente';
+    }
+
     /**
-     * 
+     *
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
