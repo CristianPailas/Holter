@@ -28,7 +28,7 @@ class AuthenticationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(RouteServiceProvider::HOME);
+        $response->assertRedirect(RouteServiceProvider::DASHBOARD);
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void
@@ -40,6 +40,49 @@ class AuthenticationTest extends TestCase
             'password' => 'wrong-password',
         ]);
 
+        $this->assertGuest();
+    }
+    /** @test */
+    public function user_can_login_with_correct_credentials()
+    {
+        $user = User::factory()->create([
+            'password' => bcrypt('password123'),
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'password123',
+        ]);
+
+        $response->assertRedirect('/dashboard');
+        $this->assertAuthenticatedAs($user);
+    }
+    /** @test */
+    public function user_cannot_login_with_wrong_credentials()
+    {
+        $user = User::factory()->create([
+            'password' => bcrypt('password123'),
+        ]);
+
+        $response = $this->from('/login')->post('/login', [
+            'email' => $user->email,
+            'password' => 'wrongpassword',
+        ]);
+
+        $response->assertRedirect('/login');
+        $this->assertGuest();
+    }
+
+    /** @test */
+    public function authenticated_user_can_logout()
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $response = $this->post('/logout');
+
+        $response->assertRedirect('/');
         $this->assertGuest();
     }
 }

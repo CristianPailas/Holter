@@ -120,6 +120,7 @@ class ReporteHolterIndex extends Component
         $idUser = Auth::user()->id;
         $pcte = Pacientes::where(['user_id' => $idUser])->get();
         $obj = new PacientesIndex();
+        //print_r($pcte[0]->fecha_nacimiento);
         $edad = $obj->calcularEdad($pcte[0]->fecha_nacimiento);
         $listadoProcedimientos = Procedimientos::with(['paciente', 'dispositivo'])
             ->where(['procedimientos.paciente_id' => $pcte[0]->id])

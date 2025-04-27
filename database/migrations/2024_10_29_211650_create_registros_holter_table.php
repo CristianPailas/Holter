@@ -27,19 +27,6 @@ return new class extends Migration
             $table->string('supr_total', 3);
             $table->foreign('procedimiento_id')->references('id')->on('procedimientos');
             $table->timestamps();
-
-            /*
-                $table->id();
-                $table->unsignedBigInteger('paciente_id');
-                $table->timestamp('timestamp');
-                $table->integer('frecuencia_cardiaca');
-                $table->float('variabilidad_rr');
-                $table->float('qrs_duracion');
-                $table->float('st_desviacion');
-                $table->string('tipo_arritmia')->nullable();
-                $table->json('episodios')->nullable();
-                $table->timestamps();
-            */
         });
     }
 

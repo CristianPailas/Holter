@@ -17,9 +17,6 @@ class RoleMiddleware
             return redirect()->route('login');
         }
         $userRole = Auth::user()->role;
-        /*
-        Log::info("Usuario autenticado con rol: " . $userRole);
-        Log::info("Rol en ruta: " . $role); */
 
         if (auth()->user()->role != $role) {
             Log::warning("Acceso denegado al usuario con rol: " . $userRole);
